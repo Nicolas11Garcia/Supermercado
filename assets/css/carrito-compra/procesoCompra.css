@@ -1,0 +1,365 @@
+/*--------VARIABLES--------*/
+:root {
+    --verde: #51AA1B;
+    --negro: black;
+    --plomo-boton: #EAEAEC;
+    --plomo-input: #B7B7B7;
+    --font: 'Poppins', sans-serif;
+    --tamaño-h2: 24px;
+}
+
+.container-form{
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+
+.redes a, .derecha-usuario a, .siguenos, .derecha-usuario p{
+    color: white !important;
+}
+
+.texto-pequeño{
+    color: black;
+}
+
+.izquierda-header-compra, .derecha-header-compra{
+    width: 200px;
+}
+
+
+
+
+.izquierda{
+    width: 65%;
+    height: min-content;
+}
+
+.derecha{
+    width: 400px;
+}
+
+
+
+.titulo-h3{
+    font-weight: 400;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.texto-post-venta{
+    font-size: 16px;
+    margin-bottom: 10px;
+    font-weight: 400;
+    
+}
+
+
+.input-correo{
+    width: 100%;
+}
+
+.input-flex-item{
+    width: 420px;
+}
+
+.flex-input{
+    display: flex;
+    justify-content: space-between;
+}
+
+.contenedor-izquierda-derecha-carrito{
+    margin-bottom: 50px;
+}
+
+
+
+
+#warning{
+    color: #FF3838;
+    font-size: 14px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.informacion-de-contacto{
+    background: #F5F5F5;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+
+
+
+.dato-ciente-flex{
+    display: flex;
+    gap: 10px;
+}
+
+.dato-cliente{
+    font-size: 13px;
+}
+
+.btn-editar{
+    display: flex;
+    width: 80px;
+    height: 30px;
+    align-items: center;
+    justify-content: center;
+    background: var(--verde);
+    color: white;
+    margin-right: 50px;
+}
+
+.btn-editar a{
+    color: white;
+}
+
+.btn-editar i{
+    font-size: 14px;
+    margin-top: 5px;
+    margin-right: 4px;
+}
+
+
+
+
+
+
+
+.img-webpay{
+    width: 150px;
+}
+
+.img-webpay img{
+    width: 100%;
+}
+
+
+.contenedor-img-texto{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.productos-comprados{
+    margin-bottom: 30px;
+    overflow: hidden;
+    overflow-y: scroll;
+    height: min-content;
+    max-height: 200px;
+}
+
+
+
+.titulo-producto{
+    max-width: 200px;
+    line-height: 15px;
+}
+
+.titulo-producto:hover, .marca:hover{
+    text-decoration: none;
+}
+
+.titulo-producto, .marca{
+    font-size: 14px;
+    margin-right: 20px;
+}
+
+.item-comprado{
+    display: flex;
+    justify-content: space-between;
+    height: 85px;
+    align-items: center;
+    border-bottom: 1px solid #e2e2e2;
+
+}
+
+.img-item-comprado{
+    width: 64px;
+    height: 64px;
+}
+
+.img-item-comprado img{
+    width: 100%;
+    object-fit: cover;
+}
+
+
+.precio-item{
+    font-size: 13px;
+    margin-right: 10px;
+}
+
+
+
+.detalles-carro{
+    margin-right: 10px;
+    width: 220px;
+
+}
+
+.precio-cantidad{
+    font-size: 13px;
+    color: #707070;
+ }
+
+
+
+
+
+.oculto{
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.6s;
+ }
+ 
+ .visible{
+    visibility: visible;
+    opacity: 1;
+    transition: 0.6s;
+ }
+
+
+
+
+
+
+.errorinput{
+    border: 1.6px solid #FF3838;
+}
+
+
+.btn-editar, .btn-editar p{
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.pequeño-texto-post-venta{
+    font-size: 14px;
+}
+
+
+
+
+.info-cliente-post-venta{
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.titular-datos{
+    font-weight: 600;
+}
+
+.button-center{
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn-seguir-comprando{
+    background: #51AA1B;
+    color: white;
+    font-size: 14px;
+    display: flex;
+    width: 230px;
+    height: 40px;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.pequeño-texto-post-venta{
+    margin-bottom: 12px;
+}
+
+.parrafo-post{
+    max-width: 250px;
+    line-height: 17px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

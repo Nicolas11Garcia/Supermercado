@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalizando Pedido</title>
+
+    <style>
+        .container{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .pre-loader{
+            position: absolute;
+            left: 50%;
+            top: 50%;
+        }
+
+        .pre-loader span{
+            height: 28px;
+            width: 28px;
+            display: block;
+            position: absolute;
+            left: 0;
+            top: 0;
+            border-radius: 50%;
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        .pre-loader span:nth-child(1){
+            left: -4.5em;
+            animation-delay: 0s;
+            background: #51AA1B;
+
+        }
+
+        .pre-loader span:nth-child(2){
+            left: -1.5em;
+            animation-delay: 0.1s;
+            background: #51AA1B;
+
+        }
+
+        .pre-loader span:nth-child(3){
+            left: 1.5em;
+            animation-delay: 0.2s;
+            background: #51AA1B;
+
+
+        }
+
+        .pre-loader span:nth-child(4){
+            left: 4.5em;
+            animation-delay: 0.3s;
+            background: #51AA1B;
+
+
+        }
+
+        p{
+            font-size: 18px;
+            font-family: poppins;
+            font-weight: 400;
+            text-align: center;
+            margin-top: 260px;
+        }
+
+        @keyframes wave{
+            0%,
+            75%,
+            100%{
+                transform: translateY(0) scale(1);
+            }
+
+            25%{
+                transform: translateY(2.5em);
+            }
+
+            50%{
+                transform: translateY(-2.5em) scale(1.1);
+            }
+
+
+
+
+        }
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+
+        <p>Redirigiendo a WebPay...</p>
+        <div class="pre-loader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+    </div>
+
+
+    <script>
+        setTimeout(function(){
+            window.location.href = "detallesPedido.php";
+        }, 4000);
+
+    </script>
+    
+</body>
+</html>
