@@ -1,0 +1,189 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+/*--------VARIABLES--------*/
+:root {
+    --verde: #51AA1B;
+    --negro: black;
+    --plomo-boton: #EAEAEC;
+    --plomo-input: #B7B7B7;
+    --font: 'Poppins', sans-serif;
+    --tamaño-h2: 24px;
+}
+
+body{
+    font-family: var(--font);
+}
+
+
+
+.contenedor-iframe-div{
+    height: 100vh;
+    width: 95%;
+    display: flex;
+}
+
+
+
+
+
+
+
+.logo{
+    width: 90px;
+    margin-bottom: 45px;
+}
+
+
+
+.panel{
+    width: 300px;
+    box-shadow: 0 1px 4px hsla(0, 0%, 10%, 0.1);
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-direction: column;
+
+    
+}
+
+
+.opciones-principales{
+    margin-top: 40px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cerrar-sesion{
+    margin-bottom: 40px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+
+.opcion{
+    display: flex;
+    width: 100%;
+    height: 45px;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    color: #6F6E6F;
+
+    transition: 0.4s;
+    
+}
+
+.opcion:hover{
+    background: #CFFFB3;
+    color: #51AA1B;
+}
+
+.opcion-seleccionada{
+    background: #CFFFB3;
+    color: #51AA1B;
+}
+
+.icon-opcion{
+    margin-right: 10px;
+    font-size: 18px;
+    display: flex;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.iframe-perfil{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+}
+
+
+
+
+
+
+
+
+.img-perfil{
+    width: 45px;
+    height: 45px;
+    background: var(--verde);
+    border-radius: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.img-perfil p{
+    font-size: 16px;
+}
+
+.nombre-usuario{
+    font-size: 14px;
+    color: #707070;
+}
+
+
+.perfil{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: end;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+
+
+iframe{
+    height: 100vh;
+    border: none;
+}
+
+

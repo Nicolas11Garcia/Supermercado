@@ -1,0 +1,378 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+/*--------VARIABLES--------*/
+:root {
+    --verde: #51AA1B;
+    --negro: black;
+    --plomo-boton: #EAEAEC;
+    --plomo-input: #B7B7B7;
+    --font: 'Poppins', sans-serif;
+    --tamaño-h2: 24px;
+}
+
+/*=============== SCROLL BAR ===============*/
+::-webkit-scrollbar {
+    width: .6rem;
+    border-radius: .5rem;
+    background-color: hsl(220, 8%, 76%);
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(220, 8%, 64%);
+    border-radius: .5rem;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(220, 8%, 54%);
+  }
+
+body{
+    font-family: var(--font);
+}
+
+html{
+    margin-left: 50px;
+    margin-top: 30px;
+}
+
+h2{
+    font-size: 24px;
+    font-weight: 600;
+
+    margin-bottom: 40px;
+
+}
+
+
+.advertencia{
+    width: 100%;
+    border: 2px solid #EFA432;
+    margin-bottom: 40px;
+    padding: 15px;
+    margin-bottom: 40px;
+
+}
+
+.titular-naranjo{
+    color: #EFA432;
+    display: flex;
+    height: 30px;
+}
+
+.texto-p-advertencia{
+    display: flex;
+    font-size: 14px;
+    align-items: center;
+}
+
+
+.advertencia-icon{
+    margin-right: 10px;
+    font-size: 26px;
+    display: flex;
+}
+
+
+.texto-advertencia{
+    font-size: 14px;
+    color: #707070;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*INPUT*/
+.input-normal{
+    display: flex;
+    flex-direction: column;
+}
+
+.label-input{
+    font-size: 14px;
+    font-family: var(--font);
+    font-weight: 400;
+    margin-bottom: 7px;
+
+}
+
+.input-text{
+    border: 1.6px solid #E1E2E4;
+    padding: 10px;
+    margin: 0;
+    font-size: 14px;
+    width: 400px;
+    outline: none;
+    font-family: var(--font);
+    margin-bottom: 20px;
+    transition: 0.6s;
+
+}
+
+::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #B7B7B7;
+  }
+
+
+.flex-input{
+    display: flex;
+    justify-content: space-between;
+    width: 75%;
+}
+
+
+
+
+
+.flex-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 30px;
+}
+
+.btn{
+    min-width: 180;
+    width: 230px;
+    height: 43px;
+    font-family: var(--font);
+    font-size: 13px;
+    background: var(--verde);
+    border: none;
+    color: white;
+    cursor: pointer;
+
+    transition: 0.6s;
+}
+
+
+.btn-cancelar{
+    background: none;
+    border: none;
+    font-family: var(--font);
+    font-size: 13px;
+    color: #707070;
+
+    cursor: pointer;
+}
+
+
+
+
+.btn-iniciar-compra{
+    width: 180px;
+}
+
+.margin-btn{
+    margin-left: 20px;
+}
+
+
+
+
+.oculto{
+    visibility: hidden;
+    opacity: 0;
+    transition: 0.6s;
+ }
+ 
+ .visible{
+    visibility: visible;
+    opacity: 1;
+    transition: 0.6s;
+ }
+
+
+
+
+
+
+
+
+
+
+
+ .btnhover:hover{
+    background: #61C923;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*PARTE 2*/
+.span-plomo{
+    color: #707070;
+}
+
+.flex{
+    display: flex;
+    min-width: 320px;
+    max-width: max-content;
+    justify-content: space-between;
+
+}
+
+.form-id-producto{
+    margin-bottom: 30px;
+    margin-top: 30px;
+}
+
+
+
+table{
+    width: 100%;
+    text-align: center;
+}
+
+.titular-fila{
+    font-size: 14px;
+    font-weight: 400;
+    color: #88898D;
+}
+
+thead{
+    -webkit-box-shadow: 0px 2px 0px -1px rgba(0,0,0,0.09);
+    -moz-box-shadow: 0px 2px 0px -1px rgba(0,0,0,0.09);
+    box-shadow: 0px 2px 0px -1px rgba(0,0,0,0.09);
+
+    height: 40px;
+}
+
+
+.producto-item{
+    font-size: 14px;
+    height: 100px;
+    border-bottom: 1px solid #e2e2e2;
+
+}
+
+td{
+    border-bottom: 1px solid #e2e2e2;
+}
+
+.oferta-style{
+    color: var(--verde);
+}
+
+.img-producto{
+    width: 80px;
+}
+
+.titulo{
+    width: 180px;
+}
+
+
+.btn-eliminar{
+    border: none;
+    background: none;
+}
+
+.btn-eliminar i{
+    font-size: 16px;
+}
+
+
+
+
+
+
+.total-contenedor{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    margin-right: 20px;
+    margin-bottom: 20px;
+}
+
+.total-contenedor p{
+    font-size: 20px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Boleta*/
+.contenedor-datos{
+    display: flex;
+    width: 700px;
+    justify-content: space-between;
+}
