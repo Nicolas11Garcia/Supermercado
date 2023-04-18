@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
+    <link rel="stylesheet" href="../../assets/css/menu-cajero/realizarcompra/realizarcompra.css">
+
+    <title>Menu cajero - Kala</title>
+</head>
+<body>
+
+    <h2>Visualizar boleta</h2>
+
+    <div class="input-normal">
+        <label class="label-input">Numero de Boleta:</label>
+        <div class="flex-rut-botones">
+            <input class="input-text" type="text" id="rut" placeholder="Ingrese numero de boleta">
+            <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="iniciar-compra"><a href="boleta-detalles.html">Buscar</a></button>
+        </div>
+    </div>
+
+
+    <div class="contenedor-datos" style="margin-bottom: 30px; margin-top: 30px;">
+        <div>
+            <div class="input-normal">
+                <p class="label-input">Rut: <span class="span-plomo"></span></p>
+            </div>
+    
+            <div class="flex">
+                <p class="label-input">Nombre: <span class="span-plomo"></span></p>
+                <p class="label-input">Apellido: <span class="span-plomo"></span></p>
+            </div>
+        </div>
+    </div>
+
+
+
+    <table>
+        <thead>
+            <tr>
+                <th class="titular-fila">ID</th>
+                <th class="titular-fila">Imagen</th>
+                <th class="titular-fila">Titulo</th>
+                <th class="titular-fila">Marca</th>
+                <th class="titular-fila">Precio unitario</th>
+                <th class="titular-fila">Cantidad</th>
+                <th class="titular-fila">Subtotal</th>
+                <th class="titular-fila"></th>
+            </tr>
+        </thead>
+
+
+    </table> 
+
+    <div style="height: 40px;">
+
+    </div>
+
+    <div class="total-contenedor">
+        <p>Total: </p>
+
+    </div>
+
+
+
+    <script>
+        window.scrollTo(0, document.body.scrollHeight);
+    
+    </script>
+</body>
+
+</html>
