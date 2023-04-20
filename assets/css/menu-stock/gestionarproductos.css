@@ -1,0 +1,130 @@
+:root {
+    --verde: #51AA1B;
+    --negro: black;
+    --plomo-boton: #EAEAEC;
+    --plomo-input: #B7B7B7;
+    --font: 'Poppins', sans-serif;
+    --tamaño-h2: 24px;
+}
+
+.contenedor-filtrado{
+    display: flex;
+    gap: 40px;
+}
+
+
+.input-text{
+    width: 300px;
+}
+
+
+
+
+
+
+.botones-opciones{
+    margin: 20px;
+    margin-right: 0;
+}
+
+.boton-opcion{
+    width: 120px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.boton-opcion i{
+    font-size: 15px;
+    margin-right: 4px;
+}
+
+.desactivar{
+    background: #F61B1B;
+}
+
+.editar{
+    background: #3679FF;
+}
+
+.activar{
+    background: #30BB27;
+}
+
+
+
+
+
+
+
+.switch{
+    display: none;
+}
+
+
+.visible-check{
+    background: #30BB27;
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+    border-radius: 100px;
+    cursor: pointer;
+    position: relative;
+    transition: .2s;
+    
+}
+
+.visible-check::after{
+    content: '';
+    display: block;
+    width: 21px;
+    height: 21px;
+    background: #eee;
+    border-radius: 100px;
+    position: absolute;
+    left: 25px;
+    top: 3px;
+    transition: .2s;
+}
+
+
+
+
+
+.no-visible-check{
+    display: inline-block;
+    width: 50px;
+    height: 28px;
+    background: #979797;
+    border-radius: 100px;
+    cursor: pointer;
+    position: relative;
+    transition: .2s;
+}
+
+.no-visible-check::after{
+    content: '';
+    display: block;
+    width: 21px;
+    height: 21px;
+    background: #eee;
+    border-radius: 100px;
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    transition: .2s;
+}
+
+
+
+.input-text{
+    width: 300px;
+}
+
+.select-input{
+    width: 190px;
+}
