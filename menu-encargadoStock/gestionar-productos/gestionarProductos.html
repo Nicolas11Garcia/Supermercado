@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
+    <link rel="stylesheet" href="../../assets/css/menu-cajero/realizarcompra/realizarcompra.css">
+    <link rel="stylesheet" href="../../assets/css/menu-stock/gestionarproductos.css">
+
+    <title>Menu cajero - Kala</title>
+</head>
+<body>
+
+    <h2>Gestionar productos</h2>
+
+    <div class="contenedor-filtrado" style="margin-bottom: 30px; margin-top: 30px;">
+        <div class="input-normal">
+            <label class="label-input">Buscar por ID:</label>
+            <input class="input-text" type="text" id="rut" placeholder="Ingrese ID del producto">
+        </div>
+
+        <div class="input-normal">
+            <label class="label-input">Buscar por titulo de producto:</label>
+            <input class="input-text" type="text" id="rut" placeholder="Ingrese titulo del producto">
+        </div>
+
+        <div class="input-normal">
+            <label class="label-input">Buscar por Estado:</label>
+            <select name="select" class="input-text select-input">
+                <option disabled selected="Seleccionar">Estado</option>
+                <option value="rancagua">Rancagua</option>
+            </select>
+        </div>
+        <div class="input-normal">
+            <label class="label-input">Buscar por visibilidad:</label>
+            <select name="select" class="input-text select-input">
+                <option disabled selected="Seleccionar">Visibilidad</option>
+                <option value="rancagua">Rancagua</option>
+            </select>
+        </div>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="titular-fila">ID</th>
+                <th class="titular-fila">Imagen</th>
+                <th class="titular-fila">Titulo</th>
+                <th class="titular-fila">Marca</th>
+                <th class="titular-fila">Categoria</th>
+                <th class="titular-fila">Precio venta</th>
+                <th class="titular-fila">Precio oferta</th>
+                <th class="titular-fila">Stock comprado</th>
+                <th class="titular-fila">Stock actual</th>
+                <th class="titular-fila">Visible</th>
+                <th class="titular-fila">Estado</th>
+                <th class="titular-fila"></th>
+            </tr>
+        </thead>
+
+        <tr class="producto-item">
+            <td style="width: 40px;">2</td>
+            <td style="width: 120px;"><img class="img-producto" src="../../assets/imagenes/Productos/4.jpg"></td>
+            <td class="titulo">Bebida Energética Red Bull 250 ml</td>
+            <td style="width: 120px;">Red Bull</td>
+            <td style="width: 120px;">Energéticas</td>
+            <td style="width: 70px;">$14.590</td>
+            <td style="width: 70px;">$1.390</td>
+            <td style="width: 70px;">20</td>
+            <td style="width: 70px;">12</td>
+            <td style="width: 70px;">
+                <div class="swtich-container">
+                    <input type="checkbox" class="switch">
+                    <label for="switch" class="no-visible-check"></label>
+                </div>
+
+                <div class="swtich-container">
+                    <input type="checkbox" class="switch">
+                    <label for="switch" class="visible-check"></label>
+                </div>
+
+
+
+            </td>
+            <td style="width: 80px; margin: 20px;">Desactivado</td>
+            <td style="width: 80px;">
+                <div class="botones-opciones">
+                    <div class="desactivar boton-opcion">
+                        <a>Desactivar</a>
+                    </div>
+                    <div class="editar boton-opcion">
+                            <a>Editar</a>
+                    </div>
+                    <div class="activar boton-opcion">
+                        <a>Activar</a>
+                    </div>
+                </div>
+
+            </td>
+        </tr>
+
+
+    </table> 
+
+    <div style="height: 40px;">
+
+    </div>
+
+    <script>
+        window.scrollTo(0, document.body.scrollHeight);
+    
+    </script>
+</body>
+
+</html>
