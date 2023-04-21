@@ -1,0 +1,25 @@
+.item{
+    display: flex;
+    width: 350px;
+    justify-content: space-between;
+}
+
+.producto-reporte{
+    width: 100px;
+}
+
+.dato-producto{
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+
+
+.texto-negrito{
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.izquierda-form{
+    width: 490px;
+}

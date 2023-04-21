@@ -1,0 +1,139 @@
+:root {
+    --verde: #51AA1B;
+    --negro: black;
+    --plomo-boton: #EAEAEC;
+    --plomo-input: #B7B7B7;
+    --font: 'Poppins', sans-serif;
+    --tamaño-h2: 24px;
+}
+
+
+.contenedor-form-ingreso{
+    display: flex;
+    width: 940px;
+    justify-content: space-between;
+}
+
+.elementos-input{
+    display: flex;
+    flex-direction: column;
+}
+
+.text-area{
+    min-height: 180px;
+    max-width: 400px;
+    min-width: 400px;
+    max-height: 180px;
+}
+
+.lbl{
+    display: inline-block;
+    width: 49px;
+    height: 28px;
+    background: #979797;
+    border-radius: 100px;
+    cursor: pointer;
+    position: relative;
+    transition: .2s;
+  }
+   
+.lbl::after{
+    content: '';
+    display: block;
+    width: 22px;
+    height: 22px;
+    background: #eee;
+    border-radius: 100px;
+    position: absolute;
+    top: 3px;
+    left: 4px;
+    transition: .2s;
+  }
+   
+  #switch:checked + .lbl::after{
+    left: 24px;
+  }
+   
+  #switch:checked + .lbl{
+    background: var(--verde);
+  }
+   
+  #switch{
+    display: none;
+  }
+
+
+
+
+
+
+
+
+.contenedor-img-button-upload{
+    display: flex;
+    align-items: center;
+    
+}
+
+input[type="file"]{
+    display: none;
+}
+
+.ver-imagen{
+    width: 150px;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.6px solid #E1E2E4
+}
+
+.ver-imagen i{
+    font-size: 60px;
+    text-align: center;
+    margin: 0;
+    color: #51AA1B;
+    height: 70px;
+    width: 70px;
+}
+
+.ver-imagen img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.button-upload{
+    margin-left: 80px;
+
+}
+
+.upload-text{
+    font-size: 13px;
+    background: #142440;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 400;
+    width: 150px;
+    height: 40px;
+}
+
+.upload-text i{
+    font-size: 14px;
+    margin-right: 5px;
+}
+
+
+.div-button{
+    display: flex;
+    margin-top: 30px;
+    justify-content: center;
+}
+
+body{
+    margin-bottom: 59px;
+}
+
+

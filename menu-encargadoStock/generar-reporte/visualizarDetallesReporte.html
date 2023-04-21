@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
+    <link rel="stylesheet" href="../../assets/css/menu-cajero/realizarcompra/realizarcompra.css">
+    <link rel="stylesheet" href="../../assets/css/menu-stock/ingresarproducto.css">
+    <link rel="stylesheet" href="../../assets/css/menu-stock/generarreporte.css">
+
+    <title>Menu cajero - Kala</title>
+</head>
+<body>
+
+    <h2>Generar reporte - Reporte #95849</h2>
+
+    <div style="margin-bottom: 30px; margin-top: 30px;">
+        <div class="contenedor-form-ingreso" >
+            <div class="izquierda-form">
+                <div class="datos-solicitante" style="margin-bottom: 30px;">
+                    <p class="texto-negrito" style="margin-bottom: 20px;">Solicitante</p>
+                    <div class="flex">
+                        <p class="label-input">Nombre: <span class="span-plomo">Nicolas</span></p>
+                        <p class="label-input">Cargo: <span class="span-plomo">20.985.433-2</span></p>
+                    </div>
+    
+                    <div class="input-normal">
+                        <p class="label-input">Apellido: <span class="span-plomo">20.985.433-2</span></p>
+                    </div>
+                </div>
+
+                <div class="contenedor-motivo" style="margin-bottom: 30px;">
+                    <p class="texto-negrito" style="margin-bottom: 20px;">Motivo</p>
+                    <div class="input-normal">
+                        <p class="label-input">Apellido:asdsadsadsadasd Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis repudiandae, quaerat totam explicabo voluptatem magnam fugit aspernatur quos doloremque quidem nemo eligendi voluptatum minima, laborum dolore, enim ipsa cupiditate modi. <span class="span-plomo">20.985.433-2</span></p>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="derecha-form">
+                    <div class="item">
+                        <div class="contenedor-producto-reporte">
+                            <img class="producto-reporte" src="../../assets/imagenes/Productos/4.jpg">
+                        </div>
+                        <div class="datos-producto">
+                            <p class="dato-producto">Titulo: <span class="span-plomo">Bebida Energética Red Bull 250 ml</span></p>
+                            <p class="dato-producto">Marca: <span class="span-plomo">Red bull</span></p>
+                            <p class="dato-producto">Stock actual: <span class="span-plomo">20</span></p>
+                        </div>
+                    </div>
+            </div>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="titular-fila">N° de reporte</th>
+                    <th class="titular-fila">Fecha de reporte</th>
+                    <th class="titular-fila">Tipo de reporte</th>
+                    <th class="titular-fila">ID de producto</th>
+                    <th class="titular-fila">Estado</th>
+                    <th class="titular-fila"></th>
+                </tr>
+            </thead>
+    
+            <tr class="producto-item">
+                <td>2948</td>
+                <td >12-05-23 20:43:48</td>
+                <td >Falta de stock</td>
+                <td>2</td>
+                <td >Pendiente de revisión</td>
+                <td><button class="btn-eliminar" type="button"><i class="fi fi-rr-trash"></i></button></td>
+            </tr>
+    
+        </table>
+
+
+
+
+
+    </div>
+
+
+
+
+
+<script>
+var newImage, showImg;
+function loadFile(event) {
+    showImg = document.getElementById('showImg');
+    svgimg = document.getElementById('icon-svg-img');
+    showImg.src = URL.createObjectURL(event.target.files[0]);
+
+    newImage = document.createElement('img');
+    newImage.src = URL.createObjectURL(event.target.files[0]);
+    
+    showImg.style.display = "block";
+    svgimg.style.display = "none";
+
+    showImg.onload = function() {
+        URL.revokeObjectURL(showImg.src) // free memory
+    }
+};
+
+</script>
+
+</body>
+
+</html>

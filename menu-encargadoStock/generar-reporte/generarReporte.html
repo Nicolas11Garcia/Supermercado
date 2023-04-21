@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+
+
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
+    <link rel="stylesheet" href="../../assets/css/menu-cajero/realizarcompra/realizarcompra.css">
+    <link rel="stylesheet" href="../../assets/css/menu-stock/ingresarproducto.css">
+
+    <title>Menu cajero - Kala</title>
+</head>
+<body>
+
+    <h2>Ingresar producto</h2>
+
+    <form class="form-ingreso" style="margin-bottom: 30px; margin-top: 30px;">
+        <div class="contenedor-form-ingreso" >
+            <div class="izquierda-form">
+                <div class="elementos-input">
+                    <label class="label-input">Marca:</label>
+                    <select name="select" id="categoria" class="input-text input-flex-item">
+                        <option disabled selected="Seleccionar">Seleccione la marca</option>
+                        <option value="rancagua">Rancagua</option>
+                    </select>
+                </div>
+                <div class="input-normal">
+                    <label class="label-input">Precio venta:</label>
+                    <input class="input-text" type="number" id="precio-venta" placeholder="Ingrese precio venta">
+                </div>
+                <div class="input-normal">
+                    <label class="label-input">Observación:</label>
+                    <textarea class="input-text text-area" type="text" id="info-del-producto" placeholder="Ingrese informacion del producto"></textarea>
+                </div>
+            </div>
+
+            <div class="derecha-form">
+                <div class="item-comprado">
+                    <div class="img-item-comprado">
+                        <img src="../assets/imagenes/Productos/'.$k->getImagen().'">
+                    </div>
+                    <div class="detalles-carro">
+                        <p class="titulo-producto">'.$k->getTitulo().'</p>
+                        <p class="marca">'.$k->getMarca().'</p>
+                        <p class="precio-cantidad">'.$k->getPrecioOferta().' * '.$_SESSION["cantidad"][$key].'</p>
+                    </div>
+
+                    <div class="precio-item">
+                        <p>$'.number_format($subtotal_producto_individual, 0, ',', '.').'</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="div-button">
+            <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="ingresar-producto">Ingresar producto</button>
+        </div>
+    </form>
+
+
+
+
+
+<script>
+var newImage, showImg;
+function loadFile(event) {
+    showImg = document.getElementById('showImg');
+    svgimg = document.getElementById('icon-svg-img');
+    showImg.src = URL.createObjectURL(event.target.files[0]);
+
+    newImage = document.createElement('img');
+    newImage.src = URL.createObjectURL(event.target.files[0]);
+    
+    showImg.style.display = "block";
+    svgimg.style.display = "none";
+
+    showImg.onload = function() {
+        URL.revokeObjectURL(showImg.src) // free memory
+    }
+};
+
+</script>
+
+</body>
+
+</html>
