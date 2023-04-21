@@ -336,19 +336,23 @@
 
                 $dao = new Dao();
 
+                $rut = $_POST['rut'];
                 $correo = $_POST['correo'];
                 $nombre = $_POST['nombre'];
                 $apellido = $_POST['apellido'];
                 $contrasena = $_POST['contraseña'];
 
-                $dao->registrar_cliente($correo,$nombre,$apellido,$contrasena);
+                $dao->registrar_cliente($rut,$correo,$nombre,$apellido,$contrasena);
                 echo '<script>window.location.href = "iniciarsesion.php";</script>';
 
                 
         }
         ?>
 
-
+            <div class="elementos-input">
+                <label class="label-input">Rut:</label>
+                <input name="rut" class="input-text" type="text" placeholder="Ingrese su rut">
+            </div>
 
             <div class="elementos-input">
                 <label class="label-input">Correo electronico:</label>

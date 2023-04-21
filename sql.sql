@@ -1,6 +1,6 @@
-CREATE DATABASE supermercadooficial;
+CREATE DATABASE supermercado;
 
-USE supermercadooficial;
+USE supermercado;
 
 -- TABLAS
 
@@ -23,6 +23,7 @@ INSERT INTO rol VALUES(NULL,'Encargado de stock');
 
 CREATE TABLE usuarios(
     id INT AUTO_INCREMENT,
+    rut VARCHAR(25),
     correo VARCHAR(80),
     nombre VARCHAR(40),
     apellido VARCHAR(40),
@@ -31,12 +32,10 @@ CREATE TABLE usuarios(
     fk_rol_id INT,
     
     PRIMARY KEY (id),
-    FOREIGN KEY (fk_rol_id) REFERENCES rol(id),
-    UNIQUE (correo)
-
+    FOREIGN KEY (fk_rol_id) REFERENCES rol(id)
 );
 
-INSERT INTO usuarios VALUES (0,NULL,NULL,NULL,NULL,NULL);
+INSERT INTO usuarios VALUES (0,NULL,NULL,NULL,NULL,NULL,NULL);
 
 
 

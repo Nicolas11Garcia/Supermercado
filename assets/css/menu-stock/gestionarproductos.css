@@ -22,6 +22,7 @@
 
 
 
+
 .botones-opciones{
     margin: 20px;
     margin-right: 0;
@@ -69,8 +70,8 @@
 .visible-check{
     background: #30BB27;
     display: inline-block;
-    width: 50px;
-    height: 28px;
+    width: 40px;
+    height: 24px;
     border-radius: 100px;
     cursor: pointer;
     position: relative;
@@ -81,12 +82,12 @@
 .visible-check::after{
     content: '';
     display: block;
-    width: 21px;
-    height: 21px;
+    width: 18px;
+    height: 18px;
     background: #eee;
     border-radius: 100px;
     position: absolute;
-    left: 25px;
+    left: 19px;
     top: 3px;
     transition: .2s;
 }
@@ -97,8 +98,8 @@
 
 .no-visible-check{
     display: inline-block;
-    width: 50px;
-    height: 28px;
+    width: 40px;
+    height: 24px;
     background: #979797;
     border-radius: 100px;
     cursor: pointer;
@@ -109,8 +110,8 @@
 .no-visible-check::after{
     content: '';
     display: block;
-    width: 21px;
-    height: 21px;
+    width: 18px;
+    height: 18px;
     background: #eee;
     border-radius: 100px;
     position: absolute;

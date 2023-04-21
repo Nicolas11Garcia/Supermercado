@@ -11,7 +11,7 @@ class DAO{
         $servername = "localhost";
         $usuario = "root";
         $password = "";
-        $bd = "supermercadooficial";
+        $bd = "supermercado";
         
         $this->con = new mysqli($servername,$usuario,$password,$bd);
         
@@ -109,15 +109,39 @@ class DAO{
     }
 
 
+    public function buscarRut($rut){
+        $this->conectarBD();
+    
+        $sql = "SELECT * FROM usuarios where rut = '$rut'";
+        $resultado = $this->con->query($sql);
+        $filas = mysqli_num_rows($resultado);
+
+        //SI HAY REGISTROS CON ESE RUT
+        if($filas >=1){
+            return 1;
+        }
+
+        //NO HAY REGISTROS CON ESE RUT
+        else{
+            return 0;
+        }
+        
+        return $filas;
+
+        $this->con->query($sql);
+        $this->desconectorBD();
+    
+    }
+
 
 
     //REGISTRAR CLIENTE
-    public function registrar_cliente($correo,$nombre,$apellido,$contraseña_normal){
+    public function registrar_cliente($rut,$correo,$nombre,$apellido,$contraseña_normal){
         $this->conectarBD();
     
         $contrasena_encrip= MD5($contraseña_normal);
     
-        $sql = "INSERT INTO usuarios VALUES(NULL,'$correo','$nombre','$apellido','$contrasena_encrip',1)";
+        $sql = "INSERT INTO usuarios VALUES(NULL,'$rut','$correo','$nombre','$apellido','$contrasena_encrip',1)";
         $this->con->query($sql);
         $this->desconectorBD();
     
