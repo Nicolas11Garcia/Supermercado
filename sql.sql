@@ -1,6 +1,6 @@
-CREATE DATABASE supermercado;
+CREATE DATABASE supermercadooficial;
 
-USE supermercado;
+USE supermercadooficial;
 
 -- TABLAS
 
@@ -35,6 +35,7 @@ CREATE TABLE usuarios(
     FOREIGN KEY (fk_rol_id) REFERENCES rol(id)
 );
 
+
 INSERT INTO usuarios VALUES (0,NULL,NULL,NULL,NULL,NULL,NULL);
 
 
@@ -48,12 +49,50 @@ CREATE TABLE categorias (
 
 );
 
-INSERT INTO `categorias`(`id`, `descripcion`) VALUES (NULL,'Cervezas');
-INSERT INTO `categorias`(`id`, `descripcion`) VALUES (NULL,'Promocion');
-INSERT INTO `categorias`(`id`, `descripcion`) VALUES (NULL,'Destilados');
-INSERT INTO `categorias`(`id`, `descripcion`) VALUES (NULL,'Vinos y espumantes');
-INSERT INTO `categorias`(`id`, `descripcion`) VALUES (NULL,'Bebidas');
-INSERT INTO `categorias`(`id`, `descripcion`) VALUES (NULL,'Licores');
+INSERT INTO categorias VALUES (NULL,'Supermercado');
+INSERT INTO categorias VALUES (NULL,'Lacteos');
+INSERT INTO categorias VALUES (NULL,'Despensa');
+INSERT INTO categorias VALUES (NULL,'Frutasyverduras');
+INSERT INTO categorias VALUES (NULL,'Limpieza');
+INSERT INTO categorias VALUES (NULL,'Carnicería');
+INSERT INTO categorias VALUES (NULL,'Botilleria');
+INSERT INTO categorias VALUES (NULL,'Hogar');
+
+
+
+CREATE TABLE sub_categorias (
+    id INT AUTO_INCREMENT,
+    fk_categorias_id INT,
+    descripcion VARCHAR(90),
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (fk_categorias_id) REFERENCES categorias(id)
+);
+
+INSERT INTO sub_categorias VALUES (NULL,1,'Congelados');
+INSERT INTO sub_categorias VALUES (NULL,1,'Desayuno Y Dulces');
+INSERT INTO sub_categorias VALUES (NULL,7,'Bebidas');
+INSERT INTO sub_categorias VALUES (NULL,7,'Jugos');
+
+
+CREATE TABLE sub_sub_categorias (
+    id INT AUTO_INCREMENT,
+    fk_categorias_id INT,
+    fk_sub_categorias_id INT,
+    descripcion VARCHAR(90),
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (fk_sub_categorias_id) REFERENCES sub_categorias(id),
+    FOREIGN KEY (fk_categorias_id) REFERENCES categorias(id)
+
+);
+
+INSERT INTO sub_sub_categorias VALUES (NULL,1,1,'Helados y Postres');
+INSERT INTO sub_sub_categorias VALUES (NULL,1,1,'Verduras Congeladas');
+INSERT INTO sub_sub_categorias VALUES (NULL,7,3,'Bebidas Light o Zero Azúcar');
+INSERT INTO sub_sub_categorias VALUES (NULL,7,3,'Bebidas Regulares');
+
+
 
 
 CREATE TABLE marcas (
@@ -72,11 +111,19 @@ INSERT INTO marcas VALUES (NULL,'Cuisine & Co');
 
 
 
-CREATE TABLE productos (
+
+
+
+CREATE TABLE productos(
     id INT AUTO_INCREMENT,
     titulo VARCHAR(130),
+
     fk_marca_id INT,
-    fk_categoria_id INT, 
+
+    fk_categorias_id INT,
+    fk_sub_categoria_id INT,
+    fk_sub_sub_categoria_id INT,
+
     precioventa INT,
     preciooferta INT,
     stockcomprado INT,
@@ -84,20 +131,23 @@ CREATE TABLE productos (
     informaciondelproducto VARCHAR(1200),
     imagen VARCHAR(60),
     activo BIT,
+    visible BIT,
     oferta BIT,
 
     PRIMARY KEY (id),
-    FOREIGN KEY (fk_categoria_id) REFERENCES categorias(id),
-    FOREIGN KEY (fk_marca_id) REFERENCES marcas(id)
+    FOREIGN KEY (fk_marca_id) REFERENCES marcas(id),
+    FOREIGN KEY (fk_categorias_id) REFERENCES categorias(id),
+    FOREIGN KEY (fk_sub_categoria_id) REFERENCES sub_categorias(id),
+    FOREIGN KEY (fk_sub_sub_categoria_id) REFERENCES sub_sub_categorias(id)
 );
 
 
-INSERT INTO productos VALUES (NULL,'Queso de cabra ahumado 250 g',1,1,7990,5990,20,20,'','1.jpg',1,1);
-INSERT INTO productos VALUES (NULL,'Café Jacobs Kronung Liofilizado, 100 g',2,1,4990,2990,20,20,'','2.jpg',1,1);
-INSERT INTO productos VALUES (NULL,'Papel Higiénico Scott Rindemax 25 m 8 un.',3,1,6390,4290,20,20,'','3.jpg',1,1);
-INSERT INTO productos VALUES (NULL,'Bebida Energética Red Bull 250 ml',4,1,1590,1390,20,20,'','4.jpg',1,1);
-INSERT INTO productos VALUES (NULL,'Jamón serrano 100 g',5,1,5990,3990,20,20,'','5.jpg',1,1);
-INSERT INTO productos VALUES (NULL,'Aceite maravilla 900 ml',6,1,4290,3290,20,20,'','6.jpg',1,1);
+INSERT INTO productos VALUES (NULL,'Queso de cabra ahumado 250 g',1,1,1,1,7990,5990,20,20,'','1.jpg',1,1,1);
+INSERT INTO productos VALUES (NULL,'Café Jacobs Kronung Liofilizado, 100 g',2,1,1,1,4990,2990,20,20,'','2.jpg',1,1,1);
+INSERT INTO productos VALUES (NULL,'Papel Higiénico Scott Rindemax 25 m 8 un.',3,1,1,1,6390,4290,20,20,'','3.jpg',1,1,1);
+INSERT INTO productos VALUES (NULL,'Bebida Energética Red Bull 250 ml',4,1,1,1,1590,1390,20,20,'','4.jpg',1,1,1);
+INSERT INTO productos VALUES (NULL,'Jamón serrano 100 g',5,1,1,1,5990,3990,20,20,'','5.jpg',1,1,1);
+INSERT INTO productos VALUES (NULL,'Aceite maravilla 900 ml',6,1,1,1,4290,3290,20,20,'','6.jpg',1,1,1);
 
 
 
@@ -153,6 +203,57 @@ CREATE TABLE detalle(
 
 
 
+CREATE TABLE boleta(
+    id INT AUTO_INCREMENT,
+    fk_cliente_fk INT,
+    total INT,
+    fecha DATETIME,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (fk_cliente_fk) REFERENCES usuarios(id)
+);
+
+CREATE TABLE detalle_boleta(
+    id INT AUTO_INCREMENT,
+    fk_boleta_id INT,
+    producto_id_fk INT,
+    precio INT,
+    cantidad INT,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (fk_boleta_id) REFERENCES boleta(id),
+    FOREIGN KEY (producto_id_fk) REFERENCES productos(id)
+);
+
+CREATE TABLE productos_detalle_boleta_temporal(
+    id INT AUTO_INCREMENT,
+    producto_id_fk INT,
+    precio INT,
+    rut VARCHAR(25),
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (producto_id_fk) REFERENCES productos(id)
+);
+
+
+
+
+
+CREATE TABLE reporte (
+    id INT AUTO_INCREMENT,
+    producto_id_fk INT,
+    tipo_reporte VARCHAR(120),
+    motivo VARCHAR(300),
+    estado VARCHAR (100),
+    fecha DATETIME,
+    fk_usuario_id INT,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (producto_id_fk) REFERENCES productos(id),
+    FOREIGN KEY (fk_usuario_id) REFERENCES usuarios(id)
+);
+
+
 
 
 
@@ -177,3 +278,16 @@ ORDER BY id DESC;
 
 SELECT productos.id AS 'id_producto', productos.titulo, marcas.descripcion AS 'Marca', productos.precioventa,productos.preciooferta,productos.informaciondelproducto,productos.imagen,productos.activo,productos.oferta,carrito_usuarios.cantidad AS 'cantidad_en_carrito' FROM carrito_usuarios INNER JOIN productos on productos.id = carrito_usuarios.id_producto_fk INNER JOIN marcas on marcas.id = productos.fk_marca_id 
 WHERE id_cliente_fk = 3;
+
+
+
+
+
+
+SELECT productos.id AS 'id_producto', productos.titulo, marcas.descripcion AS 'marca', 
+productos_detalle_boleta_temporal.precio ,productos.informaciondelproducto,productos.imagen,
+productos.activo,productos.oferta
+FROM productos_detalle_boleta_temporal 
+INNER JOIN productos on productos.id = productos_detalle_boleta_temporal.producto_id_fk 
+INNER JOIN marcas on marcas.id = productos.fk_marca_id
+WHERE productos_detalle_boleta_temporal.rut = $rut;
