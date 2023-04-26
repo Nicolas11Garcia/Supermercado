@@ -83,18 +83,16 @@
             data: {rut},
             success: function(res){
                 respuesta = res.trim();
-
-                if(respuesta == 1){
+                console.log(respuesta);
+                if(respuesta >= 1){
                     window.location.href= "procesoRealizarCompra.php?rut="+rut;
                 }
-
                 //SI EL CLIENTE NO EXISTE
                 else{
                     const contenedor_agregar_cliente = document.getElementById("contenedor-agregar-cliente");
                     $("#contenedor-agregar-cliente").removeClass("oculto");
                     $("#contenedor-agregar-cliente").addClass("visible");
                     $("#iniciar-compra").addClass("oculto");
-
                     $("#advertencia-aviso").addClass("visible");
                     $("#advertencia-aviso").removeClass("oculto");
                     $("#advertencia-aviso").addClass("advertencia");
@@ -119,8 +117,34 @@
     });
 
     $('#registrar-e-iniciar').click(function(){
-        location.href = "procesoRealizarCompra.html";
+        var rut = document.getElementById('rut').value;
+        var nombre = document.getElementById('nombre').value;
+        var apellido = document.getElementById('apellido').value;
+
+        $.ajax({
+            type:'POST',
+            url:'php/ingresarCliente.php', //URL
+            data: {rut,nombre,apellido},
+            success: function(res){
+                respuesta = res.trim();
+
+                if(respuesta >= 1){
+                    window.location.href= "procesoRealizarCompra.php?rut="+rut;
+                }
+            }
+        });
     });
+
+
+
+
+
+
+
+
+
+
+
 
     document.getElementById('rut').addEventListener('input', function(evt) {
     let value = this.value.replace(/\./g, '').replace('-', '');

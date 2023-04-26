@@ -1,29 +1,15 @@
 
 
 <?php
-/*
 include('../../php/class/Dao.php');
+session_start();
 $dao = new DAO();
 
 $rut = $_GET['rut'];
-$filas = $dao->buscarRut($rut); //SI hay filas, hay registro
 
-if($filas == 0){
-    header('location: realizarCompra.php');
-}
+$_SESSION['rut'] = $rut;
 
-if($rut == null){
-    header('location: realizarCompra.php');
-}
-
-*/
 ?>
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -44,86 +30,280 @@ if($rut == null){
 
     <link rel="stylesheet" href="../../assets/css/menu-cajero/realizarcompra/realizarcompra.css">
 
+    <style>
+        .contenedor-proceso-compra{
+            position: relative;
+
+        }
+
+        .loader{
+            position: absolute;
+            width: 94%;
+            height: 100%;
+            top: 0px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .fondo-blanco{
+            background: white;
+            position: relative;
+            width: 100%;
+            height: 100%;
+            opacity: 0.8;
+        }
+
+        .contenido-loader{
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .pre-loader{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 400px;
+            height: 200px;
+            opacity: 1;
+
+            position: relative;
+        }
+
+        .pre-loader span{
+            height: 28px;
+            width: 28px;
+            display: block;
+            margin: 10px;
+            left: 0;
+            top: 0;
+            border-radius: 50%;
+            animation: wave 2s ease-in-out infinite;
+        }
+
+        .pre-loader span:nth-child(1){
+            left: -4.5em;
+            animation-delay: 0s;
+            background: #51AA1B;
+
+        }
+
+        .pre-loader span:nth-child(2){
+            left: -1.5em;
+            animation-delay: 0.1s;
+            background: #51AA1B;
+
+        }
+
+        .pre-loader span:nth-child(3){
+            left: 1.5em;
+            animation-delay: 0.2s;
+            background: #51AA1B;
+
+
+        }
+
+        .pre-loader span:nth-child(4){
+            left: 4.5em;
+            animation-delay: 0.3s;
+            background: #51AA1B;
+
+
+        }
+
+
+        @keyframes wave{
+            0%,
+            75%,
+            100%{
+                transform: translateY(0) scale(1);
+            }
+
+            25%{
+                transform: translateY(2.5em);
+            }
+
+            50%{
+                transform: translateY(-2.5em) scale(1.1);
+            }
+        }
+
+    </style>
+
     <title>Menu cajero - Kala</title>
 </head>
 <body>
-
-    <h2>Realizar compra</h2>
-
-
-
-    <div class="contenedor-datos" style="display: block;">
-        <div class="input-normal">
-            <p class="label-input">Rut: <span class="span-plomo">20.985.433-2</span></p>
-        </div>
-
-        <div class="flex">
-            <p class="label-input">Nombre: <span class="span-plomo">Nicolas</span></p>
-            <p class="label-input">Apellido: <span class="span-plomo">20.985.433-2</span></p>
-        </div>
-    </div>
-
-    <form class="form-id-producto">
-        <div class="input-normal">
-            <label class="label-input">ID de producto:</label>
-            <div class="flex-rut-botones">
-                <input class="input-text" type="text" id="rut" placeholder="Ingrese ID del producto:">
-                <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="iniciar-compra" style="margin-right: 10px;">Agregar producto</button>
-                <button type="button" class="btn-cancelar" id="omitir-ingreso-cliente">Cancelar compra</button>
+    <div class="contenedor-proceso-compra">
+        <h2>Realizar compra</h2>
+        <div class="contenedor-datos" style="display: block;">
+        <?php
             
+            $datos_cliente = $dao->datosClienteRut($rut);
+
+            $nombre = "";
+            $apellido = "";
+            $id = "";
+
+            foreach ($datos_cliente as $k) {
+                $nombre = $k->getNombre();
+                $apellido =  $k->getApellido();
+                $_SESSION['id_cliente_caja'] = $k->getId();
+            }
+
+        ?>
+            <div class="input-normal">
+                <p class="label-input">Rut: <span class="span-plomo"><?php echo $rut ?></span></p>
+            </div>
+
+            <div class="flex">
+                <p class="label-input">Nombre: <span class="span-plomo"><?php echo $nombre ?></span></p>
+                <p class="label-input">Apellido: <span class="span-plomo"><?php echo $apellido ?></span></p>
             </div>
         </div>
-    </form>
 
-    <table>
-        <thead>
-            <tr>
-                <th class="titular-fila">ID</th>
-                <th class="titular-fila">Imagen</th>
-                <th class="titular-fila">Titulo</th>
-                <th class="titular-fila">Marca</th>
-                <th class="titular-fila">Precio unitario</th>
-                <th class="titular-fila">Cantidad</th>
-                <th class="titular-fila">Subtotal</th>
-                <th class="titular-fila"></th>
-            </tr>
-        </thead>
+        <form class="form-id-producto">
+            <div class="input-normal">
+                <label class="label-input">ID de producto:</label>
+                <div class="flex-rut-botones">
+                    <input class="input-text" type="text" id="id_producto" placeholder="Ingrese ID del producto:">
+                    <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="agregar-producto" style="margin-right: 10px;">Agregar producto</button>
+                    <button type="button" class="btn-cancelar" id="cancelar-compra">Cancelar compra</button>
+                </div>
+            </div>
+        </form>
 
-        <tr class="producto-item">
-            <td>2</td>
-            <td style="width: 120px;"><img class="img-producto" src="../../assets/imagenes/Productos/4.jpg"></td>
-            <td class="titulo">Bebida Energética Red Bull 250 ml</td>
-            <td style="width: 150px;">Red Bull</td>
-            <td style="width: 150px;">$1.390 <span class="oferta-style">(OF)</span></td>
-            <td style="width: 100px;">1</td>
-            <td style="width: 130px;">$1.390</td>
-            <td><button class="btn-eliminar" type="button"><i class="fi fi-rr-trash"></i></button></td>
-        </tr>
+        <table id="tabla">
+            <thead>
+                <tr>
+                    <th class="titular-fila">ID</th>
+                    <th class="titular-fila">Imagen</th>
+                    <th class="titular-fila">Titulo</th>
+                    <th class="titular-fila">Marca</th>
+                    <th class="titular-fila">Precio unitario</th>
+                    <th class="titular-fila">Cantidad</th>
+                    <th class="titular-fila"></th>
+                </tr>
+            </thead>
 
-    </table>
+        </table>
 
-    <div style="height: 40px;">
+        <div style="height: 40px;">
+
+        </div>
+
+        <div class="total-contenedor">
+            <p id="total-general">Total: $0</p>
+            <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="pagar">Pagar</button>
+
+        </div>
+    </div>
+    <div class="loader oculto" id="loader">
+        <div class="fondo-blanco">
+
+        </div>
+        <div class="contenido-loader">
+            <p>Pagando...</p>
+                <div class="pre-loader">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+        </div>
 
     </div>
 
-    <div class="total-contenedor">
-        <p>Total: $24.990</p>
-        <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="iniciar-compra">Pagar</button>
-
-    </div>
-
-
-
-
-</body>
 
 
 
 
 <script>
-    window.scrollTo(0, document.body.scrollHeight);
+    //AGREGAALCARRITO SIN ACTUALIZAR /*
+    $('#agregar-producto').click(function(){
+                var id_producto = document.getElementById('id_producto').value;
+                $.ajax({
+                    type:'POST',
+                    url:'php/agregarProductoDetalle.php',
+                    data:{id_producto},
+                    success: function(res){
+                        $("#tabla").html(res);
+                        trim = res.trim();
+                        obtenerTotal();
 
-    console.log()
+
+                        //ELIMINAR SIN ACTUALIZAR   //TRABAJO ACA PORQUE EL CODIGO VIENE DESPUES DE HACER CLIC, NO LEE EL CODIGO ANTES
+                        $('.btn-eliminar').click(function(){
+                            if (confirm('Estas seguro de eliminar el producto?')) {
+                                //Recuperar id del form
+                                var id_posicion_eliminar = $(this).attr("id");
+                                ///convertirlo en string
+                                $.ajax({
+                                    type:'POST',
+                                    url:'php/eliminarProductoDetalle.php', //URL
+                                    data: {id_posicion_eliminar},
+                                    success: function(data)
+                                    {
+                                        $("#item-producto" + id_posicion_eliminar).hide("slow");
+                                        obtenerTotal();
+                                    }
+                                }); 
+                            }
+                        });
+
+                        window.scrollTo(0, document.body.scrollHeight);
+                    }
+        });
+
+    });
+
+    function obtenerTotal(){
+        $.ajax({
+                type:'POST',
+                url:'php/calcularTotal.php', //URL
+                data: "", //no entrego ningun valor a php
+                success: function(res){
+                    $("#total-general").html(res);
+                }
+        });
+    }
+
+    $('#pagar').click(function(){
+        var loader = document.getElementById('loader');
+        $("#loader").removeClass("oculto");
+
+        $.ajax({
+                type:'POST',
+                url:'php/insertarCompra.php', //URL
+                data: "", //no entrego ningun valor a php
+                success: function(res){
+                    $("#respuesta").html(res);
+                    setTimeout(function(){
+                        window.location.href= "compraRealizada.php?boleta="+res;
+                    }, 4000);
+
+                }
+        });
+    });
+
+    $('#cancelar-compra').click(function(){
+        if (confirm('Estas seguro cancelar la compra?')) {
+            $.ajax({
+                type:'POST',
+                url:'php/cancelarCompra.php', //URL
+                data: "", //no entrego ningun valor a php
+                success: function(res){
+                    window.location.href= "realizarCompra.php";
+                }
+            });
+        }
+
+    });
 
 </script>
+</body>
+
 </html>

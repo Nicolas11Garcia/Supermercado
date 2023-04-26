@@ -109,6 +109,75 @@ class DAO{
     }
 
 
+    //BUSCAR DATOS DE CLIENTE RUT
+    public function datosClienteRut($rut){
+        $this->conectarBD();
+        $sql = "SELECT * FROM usuarios where rut = '$rut'";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+        
+        $datos_usuario = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id = $r['id'];
+                $nombre = $r['nombre'];
+                $apellido = $r['apellido'];
+
+                $usuario = new Usuario($id,$rut,$nombre,$apellido);
+                $datos_usuario[] = $usuario;
+
+            }
+            $this->desconectorBD();
+            return $datos_usuario;
+        }
+
+        else{
+            return 0;
+        }
+    }
+
+    //BUSCAR DATOS DE CLIENTE RUT POR ID
+    public function datosClienteID($id){
+        $this->conectarBD();
+        $sql = "SELECT * FROM usuarios where id = '$id'";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+        
+        $datos_usuario = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id = $r['id'];
+                $rut = $r['rut'];
+                $nombre = $r['nombre'];
+                $apellido = $r['apellido'];
+
+                $usuario = new Usuario($id,$rut,$nombre,$apellido);
+                $datos_usuario[] = $usuario;
+
+            }
+            $this->desconectorBD();
+            return $datos_usuario;
+        }
+
+        else{
+            return 0;
+        }
+    }
+
+    //REGISTRAR CLIENTE
+    public function registrar_usuario_caja($rut,$nombre,$apellido){
+        $this->conectarBD();
+    
+        $sql = "INSERT INTO usuarios VALUES(NULL,'$rut','','$nombre','$apellido','',1)";
+        $this->con->query($sql);
+        $this->desconectorBD();
+    
+    }
+
     public function buscarRut($rut){
         $this->conectarBD();
     
@@ -128,20 +197,6 @@ class DAO{
         
         return $filas;
 
-        $this->con->query($sql);
-        $this->desconectorBD();
-    
-    }
-
-
-
-    //REGISTRAR CLIENTE
-    public function registrar_cliente($rut,$correo,$nombre,$apellido,$contraseña_normal){
-        $this->conectarBD();
-    
-        $contrasena_encrip= MD5($contraseña_normal);
-    
-        $sql = "INSERT INTO usuarios VALUES(NULL,'$rut','$correo','$nombre','$apellido','$contrasena_encrip',1)";
         $this->con->query($sql);
         $this->desconectorBD();
     
@@ -178,15 +233,50 @@ class DAO{
             return $lista_informacion;
         }
 
+        else if(($fila == 1) && ($pass_compara == $pass_cf) && $buscar_pass_estado['fk_rol_id'] == 4){
+            $lista_informacion[0] = 4; //rol
+            $lista_informacion[1] = $id_de_usuario;
+            $lista_informacion[2] = $nombre;
+            $lista_informacion[3] = $apellido;
+
+            return $lista_informacion;
+        }
+
         else if(($fila == 1) && ($pass_compara == $pass_cf) && $buscar_pass_estado['fk_rol_id'] == 2){
-            return 2; //admin
+            $lista_informacion[0] = 2; //rol
+            $lista_informacion[1] = $id_de_usuario;
+            $lista_informacion[2] = $nombre;
+            $lista_informacion[3] = $apellido;
+
+            return $lista_informacion;
+        }
+
+        else if(($fila == 1) && ($pass_compara == $pass_cf) && $buscar_pass_estado['fk_rol_id'] == 3){
+            $lista_informacion[0] = 3; //rol
+            $lista_informacion[1] = $id_de_usuario;
+            $lista_informacion[2] = $nombre;
+            $lista_informacion[3] = $apellido;
+
+            return $lista_informacion;
         }
 
         else{
-            return 4;
+            return 0;
 
         }
         $this->desconectorBD();
+    }
+
+    //REGISTRAR CLIENTE
+    public function registrar_cliente($rut,$correo,$nombre,$apellido,$contraseña_normal){
+        $this->conectarBD();
+    
+        $contrasena_encrip= MD5($contraseña_normal);
+    
+        $sql = "INSERT INTO usuarios VALUES(NULL,'$rut','$correo','$nombre','$apellido','$contrasena_encrip',1)";
+        $this->con->query($sql);
+        $this->desconectorBD();
+    
     }
 
     //Agregar productos al carrito
