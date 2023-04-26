@@ -27,28 +27,27 @@
     <div class="input-normal">
         <label class="label-input">Numero de Boleta:</label>
         <div class="flex-rut-botones">
-            <input class="input-text" type="text" id="rut" placeholder="Ingrese numero de boleta">
-            <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="iniciar-compra"><a href="boleta-detalles.html">Buscar</a></button>
+            <input class="input-text" type="text" id="numero-boleta" placeholder="Ingrese numero de boleta">
+            <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="buscar">Buscar</button>
         </div>
     </div>
-
 
     <div class="contenedor-datos" style="margin-bottom: 30px; margin-top: 30px;">
         <div>
             <div class="input-normal">
-                <p class="label-input">Rut: <span class="span-plomo"></span></p>
+                <p class="label-input">Rut: <span class="span-plomo" id="rut"></span></p>
             </div>
     
             <div class="flex">
-                <p class="label-input">Nombre: <span class="span-plomo"></span></p>
-                <p class="label-input">Apellido: <span class="span-plomo"></span></p>
+                <p class="label-input">Nombre: <span class="span-plomo" id="nombre"></span></p>
+                <p class="label-input">Apellido: <span class="span-plomo" id="apellido"></span></p>
             </div>
         </div>
     </div>
 
 
 
-    <table>
+    <table id="tabla">
         <thead>
             <tr>
                 <th class="titular-fila">ID</th>
@@ -66,19 +65,52 @@
     </table> 
 
     <div style="height: 40px;">
-
     </div>
 
+    <div id="respuesta">
+
+    </div>
+    
     <div class="total-contenedor">
-        <p>Total: </p>
+        <p id="total">Total: 0</p>
 
     </div>
 
 
 
     <script>
-        window.scrollTo(0, document.body.scrollHeight);
-    
+            //BUSCAR DATOS DE CLIENTE SIN ACTUALIZAR
+            $('#buscar').click(function(){
+                var numero_boleta = document.getElementById('numero-boleta').value;
+                console.log(numero_boleta);
+                $.ajax({
+                    type:'POST',
+                    url:'php/visualizarDatosCliente.php',
+                    data:{numero_boleta},
+                    success: function(res){
+                        separacion_datos = res.split("{");
+
+                        $("#rut").html(separacion_datos[0]);
+                        $("#nombre").html(separacion_datos[1]);
+                        $("#apellido").html(separacion_datos[2]);
+                        $("#total").html(separacion_datos[3]);
+                        
+                    }
+                });
+
+                $.ajax({
+                    type:'POST',
+                    url:'php/visualizarProductosBoleta.php',
+                    data:{numero_boleta},
+                    success: function(res){
+                        $("#tabla").html(res);
+                    }
+                });
+
+            });
+
+
+
     </script>
 </body>
 
