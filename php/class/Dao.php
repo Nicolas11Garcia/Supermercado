@@ -774,6 +774,315 @@ class DAO{
         }
     }
 
+    //BUSCAR CATEGORIAS
+    public function buscarCategorias(){
+        $this->conectarBD();
+
+        $sql = "SELECT * FROM categorias";
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_categorias = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id = $r['id'];
+                $descripcion = $r['descripcion'];
+
+                $categorias = new Categorias($id,$descripcion);
+
+                $lista_categorias[] = $categorias;
+
+            }
+            $this->desconectorBD();
+            return $lista_categorias;
+        }
+    }
+
+    //BUSCAR SUB-CATEGORIAS
+    public function buscarSubCategorias(){
+        $this->conectarBD();
+
+        $sql = "SELECT sub_categorias.id AS 'id_sub_categoria', categorias.id AS 'id_categoria', categorias.descripcion AS 'descripcion_categoria', sub_categorias.descripcion AS 'descripcion_sub_categoria'
+        FROM sub_categorias INNER JOIN categorias on categorias.id = sub_categorias.fk_categorias_id ORDER BY sub_categorias.id DESC";
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_sub_categorias = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id_sub_categoria = $r['id_sub_categoria'];
+                $id_categoria = $r['id_categoria'];
+                $descripcion_categoria = $r['descripcion_categoria'];
+                $descripcion_sub_categoria = $r['descripcion_sub_categoria'];
+
+                $sub_categorias = new Sub_Categorias($id_sub_categoria,$id_categoria,$descripcion_categoria,$descripcion_sub_categoria);
+
+                $lista_sub_categorias[] = $sub_categorias;
+            }
+            $this->desconectorBD();
+            return $lista_sub_categorias;
+        }
+    }
+
+    //BUSCAR SUB-CATEGORIAS SEGUN CATEGORIA
+    public function buscarSubCategoriasPorCategoria($id_categoria){
+        $this->conectarBD();
+
+        $sql = "SELECT sub_categorias.id AS 'id_sub_categoria', categorias.id AS 'id_categoria', categorias.descripcion AS 'descripcion_categoria', sub_categorias.descripcion AS 'descripcion_sub_categoria'
+        FROM sub_categorias INNER JOIN categorias on categorias.id = sub_categorias.fk_categorias_id
+        WHERE categorias.id = $id_categoria";
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_sub_categorias = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id_sub_categoria = $r['id_sub_categoria'];
+                $id_categoria = $r['id_categoria'];
+                $descripcion_categoria = $r['descripcion_categoria'];
+                $descripcion_sub_categoria = $r['descripcion_sub_categoria'];
+
+                $sub_categorias = new Sub_Categorias($id_sub_categoria,$id_categoria,$descripcion_categoria,$descripcion_sub_categoria);
+
+                $lista_sub_categorias[] = $sub_categorias;
+            }
+            $this->desconectorBD();
+            return $lista_sub_categorias;
+        }
+    }
+
+    //BUSCAR SUB-CATEGORIAS SEGUN SUB-CATEGORIA para saber cual editar
+    public function buscarSubCategoriasPorSubCategoria($id_sub_categoria){
+        $this->conectarBD();
+
+        $sql = "SELECT sub_categorias.id AS 'id_sub_categoria', categorias.id AS 'id_categoria', categorias.descripcion AS 'descripcion_categoria', sub_categorias.descripcion AS 'descripcion_sub_categoria'
+        FROM sub_categorias INNER JOIN categorias on categorias.id = sub_categorias.fk_categorias_id
+        WHERE sub_categorias.id = $id_sub_categoria";
+        
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_sub_categorias = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id_sub_categoria = $r['id_sub_categoria'];
+                $id_categoria = $r['id_categoria'];
+                $descripcion_categoria = $r['descripcion_categoria'];
+                $descripcion_sub_categoria = $r['descripcion_sub_categoria'];
+
+                $sub_categorias = new Sub_Categorias($id_sub_categoria,$id_categoria,$descripcion_categoria,$descripcion_sub_categoria);
+
+                $lista_sub_categorias[] = $sub_categorias;
+            }
+            $this->desconectorBD();
+            return $lista_sub_categorias;
+        }
+    }
+
+    //ACTUALIZAR SUB-CATEGORIA
+    public function actualizarSubCategoria($id_sub_categoria_actualizar,$id_categoria_nueva,$descripcion_sub_categoria_nueva){
+        $this->conectarBD();
+    
+        $sql = "UPDATE sub_categorias SET fk_categorias_id = $id_categoria_nueva, descripcion = '$descripcion_sub_categoria_nueva' WHERE id = $id_sub_categoria_actualizar" ;
+        $resultado = $this->con->query($sql);
+    
+        if($resultado){
+            return true;
+        }
+    
+        else{
+            return false;
+        }
+
+        $this->desconectorBD();
+
+    }
+
+    //AGREGAR NUEVA SUB-CATEGORIA
+    public function agregarSubCategoria($id_categoria,$descripcion_sub_categoria){
+        $this->conectarBD();
+    
+        $sql = "INSERT INTO sub_categorias VALUES(NULL,$id_categoria,'$descripcion_sub_categoria')";
+        $this->con->query($sql);
+        $this->desconectorBD();
+    
+    }
+
+
+
+
+    //BUSCAR SUB-SUB-CATEGORIAS
+    public function buscarSubSubCategorias(){
+        $this->conectarBD();
+
+        $sql = "SELECT sub_categorias.id AS 'id_sub_categoria', categorias.id AS 'id_categoria', sub_sub_categorias.id AS 'id_sub_subcategoria', 
+        categorias.descripcion AS 'descripcion_categoria', sub_categorias.descripcion AS 'descripcion_sub_categoria', sub_sub_categorias.descripcion AS 'descripcion_sub_sub_categoria'
+        FROM sub_sub_categorias 
+        INNER JOIN categorias on categorias.id = sub_sub_categorias.fk_categorias_id
+        INNER JOIN sub_categorias on sub_categorias.id = sub_sub_categorias.fk_sub_categorias_id
+        ORDER BY sub_sub_categorias.id DESC";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_sub_sub_categorias = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id_sub_categoria = $r['id_sub_categoria'];
+                $id_categoria = $r['id_categoria'];
+                $id_sub_sub_categoria = $r['id_sub_subcategoria'];
+                $descripcion_categoria = $r['descripcion_categoria'];
+                $descripcion_sub_categoria = $r['descripcion_sub_categoria'];
+                $descripcion_sub_sub_categoria = $r['descripcion_sub_sub_categoria'];
+
+                $sub_sub_categorias = new Sub_Sub_Categorias($id_sub_categoria,$id_categoria,$id_sub_sub_categoria,$descripcion_categoria,$descripcion_sub_categoria,$descripcion_sub_sub_categoria);
+
+                $lista_sub_sub_categorias[] = $sub_sub_categorias;
+            }
+            $this->desconectorBD();
+            return $lista_sub_sub_categorias;
+        }
+    }
+
+    //Buscar SUB-SUB-CATEGORIAS por ID CATEGORIA
+    //OBTIENE SOLO LA CATEGORIA QUE SE SELECCIONO Y NOS MUESTRA LAS SUB-CATEGORIAS Y LAS SUB-SUB-CATEGORIAS
+    public function buscarSubSubCategoriasSegunCategoria($id_categoria){
+        $this->conectarBD();
+
+        $sql = "SELECT sub_categorias.id AS 'id_sub_categoria', categorias.id AS 'id_categoria', sub_sub_categorias.id AS 'id_sub_subcategoria', 
+        categorias.descripcion AS 'descripcion_categoria', sub_categorias.descripcion AS 'descripcion_sub_categoria', sub_sub_categorias.descripcion AS 'descripcion_sub_sub_categoria'
+        FROM sub_sub_categorias 
+        INNER JOIN categorias on categorias.id = sub_sub_categorias.fk_categorias_id
+        INNER JOIN sub_categorias on sub_categorias.id = sub_sub_categorias.fk_sub_categorias_id
+        WHERE categorias.id = $id_categoria";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_sub_sub_categorias = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id_sub_categoria = $r['id_sub_categoria'];
+                $id_categoria = $r['id_categoria'];
+                $id_sub_sub_categoria = $r['id_sub_subcategoria'];
+                $descripcion_categoria = $r['descripcion_categoria'];
+                $descripcion_sub_categoria = $r['descripcion_sub_categoria'];
+                $descripcion_sub_sub_categoria = $r['descripcion_sub_sub_categoria'];
+
+                $sub_sub_categorias = new Sub_Sub_Categorias($id_sub_categoria,$id_categoria,$id_sub_sub_categoria,$descripcion_categoria,$descripcion_sub_categoria,$descripcion_sub_sub_categoria);
+
+                $lista_sub_sub_categorias[] = $sub_sub_categorias;
+            }
+            $this->desconectorBD();
+            return $lista_sub_sub_categorias;
+        }
+    }
+
+    //Buscar SUB-SUB-CATEGORIAS por ID SUB-CATEGORIA
+    //OBTIENE SOLO LA SUB-CATEGORIA QUE SELECCIONO Y NOS MUESTRA LAS SUB-CATEGORIAS Y LAS SUB-SUB-CATEGORIAS mediante esa sub-categoria
+    public function buscarSubSubCategoriasSegunSubCategoria($id_sub_categoria){
+        $this->conectarBD();
+
+        $sql = "SELECT sub_categorias.id AS 'id_sub_categoria', categorias.id AS 'id_categoria', sub_sub_categorias.id AS 'id_sub_subcategoria', 
+        categorias.descripcion AS 'descripcion_categoria', sub_categorias.descripcion AS 'descripcion_sub_categoria', sub_sub_categorias.descripcion AS 'descripcion_sub_sub_categoria'
+        FROM sub_sub_categorias 
+        INNER JOIN categorias on categorias.id = sub_sub_categorias.fk_categorias_id
+        INNER JOIN sub_categorias on sub_categorias.id = sub_sub_categorias.fk_sub_categorias_id
+        WHERE sub_categorias.id = $id_sub_categoria";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_sub_sub_categorias = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id_sub_categoria = $r['id_sub_categoria'];
+                $id_categoria = $r['id_categoria'];
+                $id_sub_sub_categoria = $r['id_sub_subcategoria'];
+                $descripcion_categoria = $r['descripcion_categoria'];
+                $descripcion_sub_categoria = $r['descripcion_sub_categoria'];
+                $descripcion_sub_sub_categoria = $r['descripcion_sub_sub_categoria'];
+
+                $sub_sub_categorias = new Sub_Sub_Categorias($id_sub_categoria,$id_categoria,$id_sub_sub_categoria,$descripcion_categoria,$descripcion_sub_categoria,$descripcion_sub_sub_categoria);
+
+                $lista_sub_sub_categorias[] = $sub_sub_categorias;
+            }
+            $this->desconectorBD();
+            return $lista_sub_sub_categorias;
+        }
+    }
+
+    //Buscar SUB-SUB-CATEGORIAS por ID SUB-SUB-CATEGORIA
+    //Funcion creada para que cuando en el select de sub-sub seleccione la que quiere, le muestre solo esa sub-sub
+    public function buscarSubSubCategoriasSegunSubSubCategoria($id_sub_sub_categoria){
+        $this->conectarBD();
+
+        $sql = "SELECT sub_categorias.id AS 'id_sub_categoria', categorias.id AS 'id_categoria', sub_sub_categorias.id AS 'id_sub_subcategoria', 
+        categorias.descripcion AS 'descripcion_categoria', sub_categorias.descripcion AS 'descripcion_sub_categoria', sub_sub_categorias.descripcion AS 'descripcion_sub_sub_categoria'
+        FROM sub_sub_categorias 
+        INNER JOIN categorias on categorias.id = sub_sub_categorias.fk_categorias_id
+        INNER JOIN sub_categorias on sub_categorias.id = sub_sub_categorias.fk_sub_categorias_id
+        WHERE sub_sub_categorias.id = $id_sub_sub_categoria";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_sub_sub_categorias = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id_sub_categoria = $r['id_sub_categoria'];
+                $id_categoria = $r['id_categoria'];
+                $id_sub_sub_categoria = $r['id_sub_subcategoria'];
+                $descripcion_categoria = $r['descripcion_categoria'];
+                $descripcion_sub_categoria = $r['descripcion_sub_categoria'];
+                $descripcion_sub_sub_categoria = $r['descripcion_sub_sub_categoria'];
+
+                $sub_sub_categorias = new Sub_Sub_Categorias($id_sub_categoria,$id_categoria,$id_sub_sub_categoria,$descripcion_categoria,$descripcion_sub_categoria,$descripcion_sub_sub_categoria);
+
+                $lista_sub_sub_categorias[] = $sub_sub_categorias;
+            }
+            $this->desconectorBD();
+            return $lista_sub_sub_categorias;
+        }
+    }
+
+    //AGREGAR NUEVA SUB-SUB-CATEGORIA
+    public function agregarSubSubCategoria($id_categoria,$id_sub_categoria,$descripcion_sub_categoria){
+        $this->conectarBD();
+    
+        $sql = "INSERT INTO sub_sub_categorias VALUES(NULL,$id_categoria,$id_sub_categoria,'$descripcion_sub_categoria')";
+        $this->con->query($sql);
+        $this->desconectorBD();
+    
+    }
+
+    //EDITAR SUB-SUB-CATEGORIA
+    public function editarSubSubCategoria($categoria_id_nueva, $sub_categoria_id_nueva,$descripcion_sub_sub_categoria_nueva,$id_a_actualizar_sub_sub){
+        $this->conectarBD();
+    
+        $sql = "UPDATE sub_sub_categorias SET fk_categorias_id = $categoria_id_nueva, fk_sub_categorias_id = $sub_categoria_id_nueva ,descripcion = '$descripcion_sub_sub_categoria_nueva' WHERE id = $id_a_actualizar_sub_sub" ;
+        $resultado = $this->con->query($sql);
+    
+        if($resultado){
+            return true;
+        }
+    
+        else{
+            return false;
+        }
+
+        $this->desconectorBD();
+
+    }
+
     
 
 }
