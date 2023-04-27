@@ -636,6 +636,144 @@ class DAO{
         }
     }
 
+    //INGRESAR REPORTE
+    public function ingresarReporte($id_producto,$tipo_reporte,$motivo,$id_usuario){
+        $this->conectarBD();
+        $conexion = $this->con;
+    
+        $sql = "INSERT INTO reporte VALUES(NULL,$id_producto,'$tipo_reporte','$motivo','Pendiente de revisión',NOW(),$id_usuario)";
+        $conexion->query($sql);
+
+        $last_id = $conexion->insert_id; //obtener el ultimo id insertado para agregarle el detalle
+        return $last_id;
+
+        $conexion->desconectorBD();
+        $this->desconectorBD();
+    }
+
+    public function buscarReporteSegunId($id_reporte){
+        $this->conectarBD();
+
+        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
+        FROM reporte
+        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
+        INNER JOIN productos on productos.id = reporte.producto_id_fk 
+        INNER JOIN rol on rol.id = usuarios.fk_rol_id
+        WHERE reporte.id = $id_reporte";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_reporte = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $numero_reporte = $r['numero_de_reporte'];
+                $fecha = $r['fecha_de_reporte'];
+                $tipo_reporte =  $r['tipo_reporte'];
+                $id_producto = $r['producto_id_fk'];
+                $estado = $r['estado'];
+                $motivo = $r['motivo'];
+                $nombre = $r['nombre'];
+                $apellido = $r['apellido'];
+                $rol = $r['rol'];
+
+                $datos_reporte = new Reporte
+                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
+
+                $lista_reporte[] = $datos_reporte;
+            }
+            $this->desconectorBD();
+            return $lista_reporte;
+        }
+    }
+
+    //Borrar REPORTE
+    public function borrarReporte($numero_reporte){
+        $this->conectarBD();
+            
+        $sql = "DELETE FROM reporte WHERE id = $numero_reporte";
+        $this->con->query($sql);
+        $this->desconectorBD();
+            
+    }
+
+    //VER TODOS LOS REPORTES SEGUN USUARIO
+    public function todosLosReportesSegunUsuario($id_usuario){
+        $this->conectarBD();
+
+        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
+        FROM reporte
+        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
+        INNER JOIN productos on productos.id = reporte.producto_id_fk 
+        INNER JOIN rol on rol.id = usuarios.fk_rol_id
+        WHERE reporte.fk_usuario_id = $id_usuario
+        ORDER BY reporte.fecha DESC";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_reporte = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $numero_reporte = $r['numero_de_reporte'];
+                $fecha = $r['fecha_de_reporte'];
+                $tipo_reporte =  $r['tipo_reporte'];
+                $id_producto = $r['producto_id_fk'];
+                $estado = $r['estado'];
+                $motivo = $r['motivo'];
+                $nombre = $r['nombre'];
+                $apellido = $r['apellido'];
+                $rol = $r['rol'];
+
+                $datos_reporte = new Reporte
+                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
+
+                $lista_reporte[] = $datos_reporte;
+            }
+            $this->desconectorBD();
+            return $lista_reporte;
+        }
+    }
+
+    public function verTodosLosReportes(){
+        $this->conectarBD();
+
+        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
+        FROM reporte
+        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
+        INNER JOIN productos on productos.id = reporte.producto_id_fk 
+        INNER JOIN rol on rol.id = usuarios.fk_rol_id
+        ORDER BY reporte.fecha DESC";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_reporte = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $numero_reporte = $r['numero_de_reporte'];
+                $fecha = $r['fecha_de_reporte'];
+                $tipo_reporte =  $r['tipo_reporte'];
+                $id_producto = $r['producto_id_fk'];
+                $estado = $r['estado'];
+                $motivo = $r['motivo'];
+                $nombre = $r['nombre'];
+                $apellido = $r['apellido'];
+                $rol = $r['rol'];
+
+                $datos_reporte = new Reporte
+                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
+
+                $lista_reporte[] = $datos_reporte;
+            }
+            $this->desconectorBD();
+            return $lista_reporte;
+        }
+    }
+
     
 
 }
