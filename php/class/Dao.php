@@ -1083,6 +1083,47 @@ class DAO{
 
     }
 
+    //INGRESAR Producto
+    public function ingresarProducto($titulo,$marca,$categoria,$sub_categoria,$sub_sub_categoria,$precioventa,$preciooferta,$stockcomprado,$informaciondelproducto,$imagen,$activo,$visible,$oferta){
+        $this->conectarBD();
+    
+        $sql = "INSERT INTO productos VALUES
+        (NULL,'$titulo',$marca,$categoria,$sub_categoria,$sub_sub_categoria,$precioventa,$preciooferta,$stockcomprado,$stockcomprado,'$informaciondelproducto','$imagen',$activo,$visible,$oferta)";
+        $this->con->query($sql);
+
+        $this->desconectorBD();
+
+    }
+
+    //EDITAR PRODUCTO
+    public function editarProducto($id_producto,$titulo,$marca,$categoria,$sub_categoria,$sub_sub_categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$imagen,$activo,$visible,$oferta){
+        $this->conectarBD();
+    
+        $sql = "UPDATE productos SET titulo = '$titulo', fk_marca_id = $marca, 
+        fk_categorias_id = $categoria, fk_sub_categoria_id = $sub_categoria, fk_sub_sub_categoria_id = $sub_sub_categoria,
+        precioventa = $precioventa, preciooferta = $preciooferta, stockcomprado = $stockcomprado, stock_actual = $stockactual,
+        informaciondelproducto = '$informaciondelproducto', imagen = '$imagen', activo = $activo, visible = $visible, oferta = $oferta
+        WHERE id = $id_producto";
+        $this->con->query($sql);
+
+        $this->desconectorBD();
+
+    }
+
+    public function editarProductoSinImagen($id_producto,$titulo,$marca,$categoria,$sub_categoria,$sub_sub_categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$activo,$visible,$oferta){
+        $this->conectarBD();
+    
+        $sql = "UPDATE productos SET titulo = '$titulo', fk_marca_id = $marca, 
+        fk_categorias_id = $categoria, fk_sub_categoria_id = $sub_categoria, fk_sub_sub_categoria_id = $sub_sub_categoria,
+        precioventa = $precioventa, preciooferta = $preciooferta, stockcomprado = $stockcomprado, stock_actual = $stockactual,
+        informaciondelproducto = '$informaciondelproducto', activo = $activo, visible = $visible, oferta = $oferta
+        WHERE id = $id_producto";
+        $this->con->query($sql);
+
+        $this->desconectorBD();
+
+    }
+
     
 
 }
