@@ -13,9 +13,12 @@
         private $imagen;
         private $activo;
         private $oferta;
+        private $visible;
+        private $sub_categoria;
+        private $sub_sub_categoria;
 
 
-        public function Producto($id,$titulo,$marca,$categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$imagen,$activo,$oferta){
+        public function Producto($id,$titulo,$marca,$categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$imagen,$activo,$oferta,$visible,$sub_categoria,$sub_sub_categoria){
             $this->id = $id;
             $this->titulo = $titulo;
             $this->marca = $marca;
@@ -28,6 +31,9 @@
             $this->imagen = $imagen;
             $this->activo = $activo;
             $this->oferta = $oferta;
+            $this->visible = $visible;
+            $this->sub_categoria = $sub_categoria;
+            $this->sub_sub_categoria = $sub_sub_categoria;
 
         }
 
@@ -69,6 +75,18 @@
         }
         public function getOferta(){
             return $this->oferta;
+        }
+
+        public function getVisible(){
+            return $this->visible;
+        }
+
+        public function getSubCategoria(){
+            return $this->sub_categoria;
+        }
+
+        public function getSubSubCategoria(){
+            return $this->sub_sub_categoria;
         }
     }
 

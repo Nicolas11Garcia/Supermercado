@@ -354,7 +354,37 @@
                     echo '<script>window.location.href = "../index.php";</script>';
                 }
 
-                else if($resultado == 4) {
+                //ADMIN
+                else if ($resultado[0] == 2) {
+                    $nombre_y_apellido = $resultado[2]. ' ' .$resultado[3];
+                    $_SESSION["cargo"] = $resultado[0];
+                    $_SESSION["nombre_usuario"] = $nombre_y_apellido;
+                    $_SESSION["id_usuario"] = $resultado[1];
+                    echo '<script>window.location.href = "../menu-admin/menu.php";</script>';
+
+                }
+
+                //ADMIN
+                else if ($resultado[0] == 3) {
+                    $nombre_y_apellido = $resultado[2]. ' ' .$resultado[3];
+                    $_SESSION["cargo"] = $resultado[0];
+                    $_SESSION["nombre_usuario"] = $nombre_y_apellido;
+                    $_SESSION["id_usuario"] = $resultado[1];
+                    echo '<script>window.location.href = "../menu-cajero/menu.php";</script>';
+
+                }
+
+                //E.STOCK
+                else if ($resultado[0] == 4) {
+                    $nombre_y_apellido = $resultado[2]. ' ' .$resultado[3];
+                    $_SESSION["cargo"] = $resultado[0];
+                    $_SESSION["nombre_usuario"] = $nombre_y_apellido;
+                    $_SESSION["id_usuario"] = $resultado[1];
+                    echo '<script>window.location.href = "../menu-encargadoStock/menu.php";</script>';
+
+                }
+
+                else if($resultado[0] == 0) {
                     
                     echo '
                     <div class="alerta" id="alerta">

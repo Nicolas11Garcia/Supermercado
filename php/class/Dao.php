@@ -3,6 +3,11 @@
 include('Producto.php');
 include('CarritoProductos.php');
 include('Orden.php');
+include('Usuario.php');
+include('Boleta.php');
+include('Categorias.php');
+include('Reporte.php');
+include('Marcas.php');
 
 class DAO{
     private $con;
@@ -11,7 +16,7 @@ class DAO{
         $servername = "localhost";
         $usuario = "root";
         $password = "";
-        $bd = "supermercado";
+        $bd = "supermercadooficial";
         
         $this->con = new mysqli($servername,$usuario,$password,$bd);
         
@@ -38,12 +43,15 @@ class DAO{
     public function mostrarTodosLosProductos(){
         $this->conectarBD();
     
-        $sql = "SELECT productos.id, productos.titulo, marcas.descripcion AS 'marca', categorias.descripcion AS 'categoria',
+        $sql = "SELECT productos.id, productos.titulo, marcas.descripcion AS 'marca', categorias.descripcion  AS 'categoria',
         productos.precioventa,productos.preciooferta,productos.stockcomprado,productos.stock_actual,productos.informaciondelproducto,
-        productos.imagen,productos.activo,productos.oferta
+        productos.imagen,productos.activo,productos.oferta, sub_categorias.descripcion AS 'sub_categoria', sub_sub_categorias.descripcion AS 'sub_sub_categoria', productos.visible
         FROM productos 
-        INNER JOIN categorias on categorias.id = productos.fk_categoria_id 
-        INNER JOIN marcas on marcas.id = productos.fk_marca_id";
+        INNER JOIN categorias on categorias.id = productos.fk_categorias_id
+        INNER JOIN sub_categorias on sub_categorias.id = productos.fk_sub_categoria_id
+        INNER JOIN sub_sub_categorias on sub_sub_categorias.id = productos.fk_sub_sub_categoria_id
+        INNER JOIN marcas on marcas.id = productos.fk_marca_id
+        ORDER BY productos.id DESC";
         $resultado = $this->con->query($sql);
     
         $lista = array();
@@ -61,8 +69,11 @@ class DAO{
             $imagen = $r['imagen'];
             $activo = $r['activo'];
             $oferta = $r['oferta'];
+            $visible = $r['visible'];
+            $sub_categoria = $r['sub_categoria'];
+            $sub_sub_categoria = $r['sub_sub_categoria'];
 
-            $producto = new Producto($id,$titulo,$marca,$categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$imagen,$activo,$oferta);
+            $producto = new Producto($id,$titulo,$marca,$categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$imagen,$activo,$oferta,$visible,$sub_categoria,$sub_sub_categoria);
             $lista[] = $producto;
     
         }
@@ -75,12 +86,15 @@ class DAO{
     public function mostrarProductoPorId($id){
         $this->conectarBD();
     
-        $sql = "SELECT productos.id, productos.titulo, marcas.descripcion AS 'marca', categorias.descripcion AS 'categoria',
+        $sql = "SELECT productos.id, productos.titulo, marcas.descripcion AS 'marca', categorias.descripcion  AS 'categoria',
         productos.precioventa,productos.preciooferta,productos.stockcomprado,productos.stock_actual,productos.informaciondelproducto,
-        productos.imagen,productos.activo,productos.oferta
+        productos.imagen,productos.activo,productos.oferta, sub_categorias.descripcion AS 'sub_categoria', sub_sub_categorias.descripcion AS 'sub_sub_categoria', productos.visible
         FROM productos 
-        INNER JOIN categorias on categorias.id = productos.fk_categoria_id 
-        INNER JOIN marcas on marcas.id = productos.fk_marca_id WHERE productos.id = $id";
+        INNER JOIN categorias on categorias.id = productos.fk_categorias_id
+        INNER JOIN sub_categorias on sub_categorias.id = productos.fk_sub_categoria_id
+        INNER JOIN sub_sub_categorias on sub_sub_categorias.id = productos.fk_sub_sub_categoria_id
+        INNER JOIN marcas on marcas.id = productos.fk_marca_id
+        WHERE productos.id = $id";
         $resultado = $this->con->query($sql);
     
         $lista = array();
@@ -98,8 +112,11 @@ class DAO{
             $imagen = $r['imagen'];
             $activo = $r['activo'];
             $oferta = $r['oferta'];
+            $visible = $r['visible'];
+            $sub_categoria = $r['sub_categoria'];
+            $sub_sub_categoria = $r['sub_sub_categoria'];
 
-            $producto = new Producto($id,$titulo,$marca,$categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$imagen,$activo,$oferta);
+            $producto = new Producto($id,$titulo,$marca,$categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$imagen,$activo,$oferta,$visible,$sub_categoria,$sub_sub_categoria);
             $lista[] = $producto;
     
         }
@@ -108,6 +125,28 @@ class DAO{
         return $lista;
     }
 
+    //MOSTRAR MARCAS
+    public function mostrarMarcas(){
+        $this->conectarBD();
+    
+        $sql = "SELECT * FROM marcas";
+        $resultado = $this->con->query($sql);
+    
+        $lista = array();
+    
+        while($r = mysqli_fetch_array($resultado)){
+            $id = $r['id'];
+            $descripcion = $r['descripcion'];
+
+            $marca = new Marca($id,$descripcion);
+            $lista[] = $marca;
+    
+        }
+        $this->desconectorBD();
+    
+        return $lista;
+    }
+    
 
     //BUSCAR DATOS DE CLIENTE RUT
     public function datosClienteRut($rut){
@@ -483,6 +522,7 @@ class DAO{
             return 0;
         }
     }
+
     //Agregar productos a detalle temporal de la orden
     public function agregarAlDetalleTemportal($id_producto,$precio,$rut){
         $this->conectarBD();
@@ -636,143 +676,36 @@ class DAO{
         }
     }
 
-    //INGRESAR REPORTE
-    public function ingresarReporte($id_producto,$tipo_reporte,$motivo,$id_usuario){
-        $this->conectarBD();
-        $conexion = $this->con;
-    
-        $sql = "INSERT INTO reporte VALUES(NULL,$id_producto,'$tipo_reporte','$motivo','Pendiente de revisión',NOW(),$id_usuario)";
-        $conexion->query($sql);
-
-        $last_id = $conexion->insert_id; //obtener el ultimo id insertado para agregarle el detalle
-        return $last_id;
-
-        $conexion->desconectorBD();
-        $this->desconectorBD();
-    }
-
-    public function buscarReporteSegunId($id_reporte){
+    //SABER LO VENDIDO
+    public function verLoVendido($fecha_desde, $fecha_hasta){
         $this->conectarBD();
 
-        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
-        FROM reporte
-        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
-        INNER JOIN productos on productos.id = reporte.producto_id_fk 
-        INNER JOIN rol on rol.id = usuarios.fk_rol_id
-        WHERE reporte.id = $id_reporte";
-
+         $sql = "SELECT boleta.id,boleta.fecha, boleta.total AS 'total' 
+         FROM detalle_boleta 
+         INNER JOIN productos on productos.id = detalle_boleta.producto_id_fk
+         INNER JOIN boleta on boleta.id = detalle_boleta.fk_boleta_id WHERE boleta.fecha >= '$fecha_desde' AND boleta.fecha <= '$fecha_hasta' 
+         GROUP BY boleta.fecha";
         $resultado = $this->con->query($sql);
-        $fila = mysqli_num_rows($resultado); //si hay filas
-
-        $lista_reporte = array();
-
-        if($fila >=1){
-            while($r = mysqli_fetch_array($resultado)){
-                $numero_reporte = $r['numero_de_reporte'];
-                $fecha = $r['fecha_de_reporte'];
-                $tipo_reporte =  $r['tipo_reporte'];
-                $id_producto = $r['producto_id_fk'];
-                $estado = $r['estado'];
-                $motivo = $r['motivo'];
-                $nombre = $r['nombre'];
-                $apellido = $r['apellido'];
-                $rol = $r['rol'];
-
-                $datos_reporte = new Reporte
-                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
-
-                $lista_reporte[] = $datos_reporte;
-            }
-            $this->desconectorBD();
-            return $lista_reporte;
-        }
-    }
-
-    //Borrar REPORTE
-    public function borrarReporte($numero_reporte){
-        $this->conectarBD();
+        
+        $lista = array();
             
-        $sql = "DELETE FROM reporte WHERE id = $numero_reporte";
-        $this->con->query($sql);
+        
+        while($r = mysqli_fetch_array($resultado)){
+            $numero_boleta = $r['id'];
+            $fecha = $r['fecha'];
+            $total = $r['total'];
+
+            $datos = new VerLoVendido($numero_boleta,$fecha,$total);
+            $lista[] = $datos;
+        }
         $this->desconectorBD();
-            
+        
+        return $lista;
     }
 
-    //VER TODOS LOS REPORTES SEGUN USUARIO
-    public function todosLosReportesSegunUsuario($id_usuario){
-        $this->conectarBD();
 
-        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
-        FROM reporte
-        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
-        INNER JOIN productos on productos.id = reporte.producto_id_fk 
-        INNER JOIN rol on rol.id = usuarios.fk_rol_id
-        WHERE reporte.fk_usuario_id = $id_usuario
-        ORDER BY reporte.fecha DESC";
 
-        $resultado = $this->con->query($sql);
-        $fila = mysqli_num_rows($resultado); //si hay filas
 
-        $lista_reporte = array();
-
-        if($fila >=1){
-            while($r = mysqli_fetch_array($resultado)){
-                $numero_reporte = $r['numero_de_reporte'];
-                $fecha = $r['fecha_de_reporte'];
-                $tipo_reporte =  $r['tipo_reporte'];
-                $id_producto = $r['producto_id_fk'];
-                $estado = $r['estado'];
-                $motivo = $r['motivo'];
-                $nombre = $r['nombre'];
-                $apellido = $r['apellido'];
-                $rol = $r['rol'];
-
-                $datos_reporte = new Reporte
-                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
-
-                $lista_reporte[] = $datos_reporte;
-            }
-            $this->desconectorBD();
-            return $lista_reporte;
-        }
-    }
-
-    public function verTodosLosReportes(){
-        $this->conectarBD();
-
-        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
-        FROM reporte
-        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
-        INNER JOIN productos on productos.id = reporte.producto_id_fk 
-        INNER JOIN rol on rol.id = usuarios.fk_rol_id
-        ORDER BY reporte.fecha DESC";
-
-        $resultado = $this->con->query($sql);
-        $fila = mysqli_num_rows($resultado); //si hay filas
-
-        $lista_reporte = array();
-
-        if($fila >=1){
-            while($r = mysqli_fetch_array($resultado)){
-                $numero_reporte = $r['numero_de_reporte'];
-                $fecha = $r['fecha_de_reporte'];
-                $tipo_reporte =  $r['tipo_reporte'];
-                $id_producto = $r['producto_id_fk'];
-                $estado = $r['estado'];
-                $motivo = $r['motivo'];
-                $nombre = $r['nombre'];
-                $apellido = $r['apellido'];
-                $rol = $r['rol'];
-
-                $datos_reporte = new Reporte
-                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
-
-                $lista_reporte[] = $datos_reporte;
-            }
-            $this->desconectorBD();
-            return $lista_reporte;
-        }
-    }
 
     //BUSCAR CATEGORIAS
     public function buscarCategorias(){
@@ -1083,6 +1016,144 @@ class DAO{
 
     }
 
+    //INGRESAR REPORTE
+    public function ingresarReporte($id_producto,$tipo_reporte,$motivo,$id_usuario){
+        $this->conectarBD();
+        $conexion = $this->con;
+    
+        $sql = "INSERT INTO reporte VALUES(NULL,$id_producto,'$tipo_reporte','$motivo','Pendiente de revisión',NOW(),$id_usuario)";
+        $conexion->query($sql);
+
+        $last_id = $conexion->insert_id; //obtener el ultimo id insertado para agregarle el detalle
+        return $last_id;
+
+        $conexion->desconectorBD();
+        $this->desconectorBD();
+    }
+
+    public function buscarReporteSegunId($id_reporte){
+        $this->conectarBD();
+
+        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
+        FROM reporte
+        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
+        INNER JOIN productos on productos.id = reporte.producto_id_fk 
+        INNER JOIN rol on rol.id = usuarios.fk_rol_id
+        WHERE reporte.id = $id_reporte";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_reporte = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $numero_reporte = $r['numero_de_reporte'];
+                $fecha = $r['fecha_de_reporte'];
+                $tipo_reporte =  $r['tipo_reporte'];
+                $id_producto = $r['producto_id_fk'];
+                $estado = $r['estado'];
+                $motivo = $r['motivo'];
+                $nombre = $r['nombre'];
+                $apellido = $r['apellido'];
+                $rol = $r['rol'];
+
+                $datos_reporte = new Reporte
+                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
+
+                $lista_reporte[] = $datos_reporte;
+            }
+            $this->desconectorBD();
+            return $lista_reporte;
+        }
+    }
+
+    //Borrar REPORTE
+    public function borrarReporte($numero_reporte){
+        $this->conectarBD();
+            
+        $sql = "DELETE FROM reporte WHERE id = $numero_reporte";
+        $this->con->query($sql);
+        $this->desconectorBD();
+            
+    }
+
+    //VER TODOS LOS REPORTES SEGUN USUARIO
+    public function todosLosReportesSegunUsuario($id_usuario){
+        $this->conectarBD();
+
+        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
+        FROM reporte
+        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
+        INNER JOIN productos on productos.id = reporte.producto_id_fk 
+        INNER JOIN rol on rol.id = usuarios.fk_rol_id
+        WHERE reporte.fk_usuario_id = $id_usuario
+        ORDER BY reporte.fecha DESC";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_reporte = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $numero_reporte = $r['numero_de_reporte'];
+                $fecha = $r['fecha_de_reporte'];
+                $tipo_reporte =  $r['tipo_reporte'];
+                $id_producto = $r['producto_id_fk'];
+                $estado = $r['estado'];
+                $motivo = $r['motivo'];
+                $nombre = $r['nombre'];
+                $apellido = $r['apellido'];
+                $rol = $r['rol'];
+
+                $datos_reporte = new Reporte
+                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
+
+                $lista_reporte[] = $datos_reporte;
+            }
+            $this->desconectorBD();
+            return $lista_reporte;
+        }
+    }
+
+    public function verTodosLosReportes(){
+        $this->conectarBD();
+
+        $sql = "SELECT reporte.id as 'numero_de_reporte', reporte.fecha as 'fecha_de_reporte', reporte.tipo_reporte, reporte.producto_id_fk, reporte.estado, reporte.motivo,usuarios.nombre, usuarios.apellido, rol.descripcion AS 'rol'
+        FROM reporte
+        INNER JOIN usuarios on usuarios.id = reporte.fk_usuario_id
+        INNER JOIN productos on productos.id = reporte.producto_id_fk 
+        INNER JOIN rol on rol.id = usuarios.fk_rol_id
+        ORDER BY reporte.fecha DESC";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_reporte = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $numero_reporte = $r['numero_de_reporte'];
+                $fecha = $r['fecha_de_reporte'];
+                $tipo_reporte =  $r['tipo_reporte'];
+                $id_producto = $r['producto_id_fk'];
+                $estado = $r['estado'];
+                $motivo = $r['motivo'];
+                $nombre = $r['nombre'];
+                $apellido = $r['apellido'];
+                $rol = $r['rol'];
+
+                $datos_reporte = new Reporte
+                ($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol);
+
+                $lista_reporte[] = $datos_reporte;
+            }
+            $this->desconectorBD();
+            return $lista_reporte;
+        }
+    }
+
     //INGRESAR Producto
     public function ingresarProducto($titulo,$marca,$categoria,$sub_categoria,$sub_sub_categoria,$precioventa,$preciooferta,$stockcomprado,$informaciondelproducto,$imagen,$activo,$visible,$oferta){
         $this->conectarBD();
@@ -1123,6 +1194,12 @@ class DAO{
         $this->desconectorBD();
 
     }
+
+    
+    
+
+
+
 
     
 

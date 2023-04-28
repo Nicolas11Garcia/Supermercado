@@ -334,7 +334,7 @@
 
     <main class="main" id="main">
         <div class="home-img">
-            <img src="assets/imagenes/home1.jpg" id="img">
+            <img src="assets/imagenes/Banner1.jpg" id="img">
         </div>
 
         

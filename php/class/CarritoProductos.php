@@ -109,3 +109,57 @@
         }
     }
 ?>
+
+
+<?php
+
+    class ProductosDetalleBoleta{
+        private $id_posicion;
+        private $id_producto;
+        private $titulo;
+        private $marca;
+        private $precio;
+        private $imagen;
+        private $activo;
+        private $oferta;
+
+
+        public function ProductosDetalleBoleta($id_posicion,$id_producto,$titulo,$marca,$precio,$imagen,$activo,$oferta){
+            $this->id_posicion = $id_posicion;
+            $this->id_producto = $id_producto;
+            $this->titulo = $titulo;
+            $this->marca = $marca;
+            $this->precio= $precio;
+            $this->imagen = $imagen;
+            $this->activo = $activo;
+            $this->oferta = $oferta;
+        }
+
+        public function getIdPosicion(){
+            return $this->id_posicion;
+        }
+        public function getIdProducto(){
+            return $this->id_producto;
+        }
+        public function getTitulo(){
+            return $this->titulo;
+        }
+        public function getMarca(){
+            return $this->marca;
+        }
+
+        public function getPrecio(){
+            return $this->precio;
+        }
+        public function getImagen(){
+            return $this->imagen;
+        }
+
+        public function getActivo(){
+            return $this->activo;
+        }
+        public function getOferta(){
+            return $this->oferta;
+        }
+    }
+?>
