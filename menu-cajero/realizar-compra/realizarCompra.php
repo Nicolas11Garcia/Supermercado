@@ -69,7 +69,13 @@
 
 
 
-</body>
+
+
+
+
+
+
+
 
 
 
@@ -140,12 +146,6 @@
 
 
 
-
-
-
-
-
-
     document.getElementById('rut').addEventListener('input', function(evt) {
     let value = this.value.replace(/\./g, '').replace('-', '');
     
@@ -168,5 +168,6 @@
 
     
 </script>
+</body>
 
 </html>

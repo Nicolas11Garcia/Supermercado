@@ -31,6 +31,24 @@ $_SESSION['rut'] = $rut;
     <link rel="stylesheet" href="../../assets/css/menu-cajero/realizarcompra/realizarcompra.css">
 
     <style>
+
+        .flex-rut-botones{
+            display: flex;
+            justify-content: space-between;
+            margin-right: 20px;
+        }
+
+        .buscar-por-nombre{
+            background: #142440;
+            width: 200px;
+            min-width: 200px;
+        }
+
+
+
+
+
+
         .contenedor-proceso-compra{
             position: relative;
 
@@ -169,11 +187,22 @@ $_SESSION['rut'] = $rut;
             <div class="input-normal">
                 <label class="label-input">ID de producto:</label>
                 <div class="flex-rut-botones">
-                    <input class="input-text" type="text" id="id_producto" placeholder="Ingrese ID del producto:">
-                    <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="agregar-producto" style="margin-right: 10px;">Agregar producto</button>
-                    <button type="button" class="btn-cancelar" id="cancelar-compra">Cancelar compra</button>
+                    <div>
+                        <input class="input-text" type="text" id="id_producto" placeholder="Ingrese ID del producto:" style="width: 260px;">
+                        <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="agregar-producto" style="margin-right: 10px;">Agregar producto</button>
+                        <button type="button" class="btn-cancelar" id="cancelar-compra">Cancelar compra</button>
+                    </div>
+
+                    <div class="buscar-por-titulo">
+                        <button type="button" id="abrir-modal" class="btn buscar-por-nombre">Buscar por titulo</button>
+                    </div>
+
                 </div>
+
+
             </div>
+
+
         </form>
 
         <table id="tabla">
@@ -216,6 +245,128 @@ $_SESSION['rut'] = $rut;
         </div>
 
     </div>
+
+
+
+    <section class="modal">
+        <div class="modal__container">
+            <div class="input-normal">
+                <label class="label-input">Buscar producto por titulo:</label>
+                <div class="flex-rut-botones">
+                    <input onkeyup="mostrar()" class="input-text" type="text" id="titulo-producto" placeholder="Ingrese titulo del producto">
+                </div>
+            </div>
+
+
+            <table id="tabla-titulo">
+                <thead>
+                    <tr>
+                        <th class="titular-fila">ID</th>
+                        <th class="titular-fila">Imagen</th>
+                        <th class="titular-fila">Titulo</th>
+                        <th class="titular-fila">Marca</th>
+                        <th class="titular-fila">Precio venta</th>
+                        <th class="titular-fila">Precio oferta</th>
+                        <th class="titular-fila"></th>
+                    </tr>
+                </thead>
+
+
+
+
+            </table>
+
+            <div class="close modal__close" id="cerrar-modal">
+                <p>X</p>
+            </div>
+        </div>
+
+    </section>
+
+
+
+
+
+
+
+
+<script>
+    $('#abrir-modal').click(function(){
+        const modal = document.querySelector('.modal');
+        modal.classList.add("modal--show");
+
+    });
+
+
+    //FUNCION TITULO DEL PRODUCTO LIKE
+    //OBTENEMOS TODO LO ESCRITO EN EL TITULO DEL PRODUCTO
+    function mostrar() {
+        var titulo_producto = $("#titulo-producto").val();
+        
+        $.ajax({
+            type:'POST',
+            url:'php/buscarPorTitulo.php', //URL
+            data: {titulo_producto},
+            success: function(data){
+                $("#tabla-titulo").html(data);
+
+                    //trabajo aca porque los productos no estan cuando carga la pagina
+                    //Aparecen con la data osea cuando se ejecuta la funcion mostrar
+                    //CUANDO DE CLIC A AGREGAR AL DETALLE al producto que busco por el titulo que se agregue al detalle
+                    $('.agregar-al-detalle').click(function(){
+                        var id_producto = $(this).attr("id");
+                        $.ajax({
+                            type:'POST',
+                            url:'php/agregarProductoDetalle.php',
+                            data:{id_producto},
+                            success: function(res){
+                                $("#tabla").html(res);
+                                trim = res.trim();
+                                obtenerTotal();
+                                $('.modal').removeClass('modal--show');
+
+                                 //ELIMINAR SIN ACTUALIZAR   
+                                 //TRABAJO ACA PORQUE EL CODIGO VIENE DESPUES DE HACER CLIC, NO LEE EL CODIGO ANTES
+                                $('.btn-eliminar').click(function(){
+                                    if (confirm('Estas seguro de eliminar el producto?')) {
+                                        //Recuperar id del form
+                                        var id_posicion_eliminar = $(this).attr("id");
+                                        ///convertirlo en string
+                                        $.ajax({
+                                            type:'POST',
+                                            url:'php/eliminarProductoDetalle.php', //URL
+                                            data: {id_posicion_eliminar},
+                                            success: function(data)
+                                            {
+                                                $("#item-producto" + id_posicion_eliminar).hide("slow");
+                                                obtenerTotal();
+                                            }
+                                        }); 
+                                    }
+                                });
+                            }
+                        });
+
+
+
+                    });
+
+
+
+            }
+        });
+        
+    };
+
+
+
+//ceramos el modal
+    $('#cerrar-modal').click(function(){
+        const modal = document.querySelector('.modal');
+        modal.classList.remove("modal--show");
+    });
+
+</script>
 
 
 

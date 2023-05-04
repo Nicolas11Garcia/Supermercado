@@ -8,6 +8,7 @@ include('Boleta.php');
 include('Categorias.php');
 include('Reporte.php');
 include('Marcas.php');
+include('Caja.php');
 
 class DAO{
     private $con;
@@ -1193,6 +1194,113 @@ class DAO{
 
         $this->desconectorBD();
 
+    }
+
+
+    //MOSTRAMOS TODAS LAS CAJAS
+    public function mostrarCajas(){
+        $this->conectarBD();
+
+        $sql = "SELECT * FROM cajas";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_cajas = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $numero_caja = $r['id'];
+                $estado = $r['estado'];
+
+                $datos_cajas = new Caja($numero_caja,$estado);
+
+                $lista_cajas[] = $datos_cajas;
+            }
+            $this->desconectorBD();
+            return $lista_cajas;
+        }
+    }
+
+    //OBTENEMOS DATOS DE LA CAJA SEGUN SU ID
+    public function mostrarCajaSegunId($id){
+        $this->conectarBD();
+
+        $sql = "SELECT * FROM cajas WHERE id = $id";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_cajas = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $numero_caja = $r['id'];
+                $estado = $r['estado'];
+
+                $datos_cajas = new Caja($numero_caja,$estado);
+
+                $lista_cajas[] = $datos_cajas;
+            }
+            $this->desconectorBD();
+            return $lista_cajas;
+        }
+    }
+
+    public function editarEstadoCaja($id_caja,$estado){
+        $this->conectarBD();
+    
+        $sql = "UPDATE cajas SET estado = '$estado'
+        WHERE id = $id_caja";
+        
+        $this->con->query($sql);
+
+        $this->desconectorBD();
+
+    }
+
+
+        //MOSTRAR PRODUCTO POR ID
+    public function mostrarProductosPorTitulo($titulo){
+        $this->conectarBD();
+    
+        $sql = "SELECT productos.id, productos.titulo, marcas.descripcion AS 'marca', categorias.descripcion  AS 'categoria',
+        productos.precioventa,productos.preciooferta,productos.stockcomprado,productos.stock_actual,productos.informaciondelproducto,
+        productos.imagen,productos.activo,productos.oferta, sub_categorias.descripcion AS 'sub_categoria', sub_sub_categorias.descripcion AS 'sub_sub_categoria', productos.visible
+        FROM productos 
+        INNER JOIN categorias on categorias.id = productos.fk_categorias_id
+        INNER JOIN sub_categorias on sub_categorias.id = productos.fk_sub_categoria_id
+        INNER JOIN sub_sub_categorias on sub_sub_categorias.id = productos.fk_sub_sub_categoria_id
+        INNER JOIN marcas on marcas.id = productos.fk_marca_id
+        WHERE productos.titulo LIKE '$titulo%' OR marcas.descripcion LIKE '$titulo%'";
+        $resultado = $this->con->query($sql);
+    
+        $lista = array();
+    
+        while($r = mysqli_fetch_array($resultado)){
+            $id = $r['id'];
+            $titulo = $r['titulo'];
+            $marca = $r['marca'];
+            $categoria = $r['categoria'];
+            $precioventa = $r['precioventa'];
+            $preciooferta = $r['preciooferta'];
+            $stockcomprado = $r['stockcomprado'];
+            $stockactual = $r['stock_actual'];
+            $informaciondelproducto = $r['informaciondelproducto'];
+            $imagen = $r['imagen'];
+            $activo = $r['activo'];
+            $oferta = $r['oferta'];
+            $visible = $r['visible'];
+            $sub_categoria = $r['sub_categoria'];
+            $sub_sub_categoria = $r['sub_sub_categoria'];
+
+            $producto = new Producto($id,$titulo,$marca,$categoria,$precioventa,$preciooferta,$stockcomprado,$stockactual,$informaciondelproducto,$imagen,$activo,$oferta,$visible,$sub_categoria,$sub_sub_categoria);
+            $lista[] = $producto;
+    
+        }
+        $this->desconectorBD();
+    
+        return $lista;
     }
 
     

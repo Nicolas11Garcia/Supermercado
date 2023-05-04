@@ -10,10 +10,18 @@ $total_general = 0;
 
 
 $lista_items_detalle_boleta = $dao->mostrarItemsDetalleBoleta($rut);
-foreach ($lista_items_detalle_boleta as $k) {
-    $total_general = $total_general + $k->getPrecio();
+
+if($lista_items_detalle_boleta){
+    foreach ($lista_items_detalle_boleta as $k) {
+        $total_general = $total_general + $k->getPrecio();
+    }
+    echo '$'.number_format($total_general, 0, ',', '.')."";
 }
-echo '$'.number_format($total_general, 0, ',', '.')."";
+
+else{
+    echo '$0';
+}
+
 
 
 ?>

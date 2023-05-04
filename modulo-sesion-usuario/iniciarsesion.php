@@ -370,7 +370,7 @@
                     $_SESSION["cargo"] = $resultado[0];
                     $_SESSION["nombre_usuario"] = $nombre_y_apellido;
                     $_SESSION["id_usuario"] = $resultado[1];
-                    echo '<script>window.location.href = "../menu-cajero/menu.php";</script>';
+                    echo '<script>window.location.href = "../menu-cajero/seleccione-caja/seleccion-caja.php";</script>';
 
                 }
 

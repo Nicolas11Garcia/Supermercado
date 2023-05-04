@@ -24,6 +24,24 @@
     <link rel="stylesheet" href="../assets/css/menu.css">
     <script src="../assets/js/main.js" defer></script>
 
+
+    <style>
+        .contenedor-perfil-caja{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .numero-caja{
+            margin-left: 50px;
+            font-size: 14px;
+        }
+
+        .n-caja{
+            color: #6F6E6F;
+        }
+    </style>
+
     <title>Menu cajero - Kala</title>
 </head>
 <body>
@@ -36,33 +54,45 @@
                 <a target="mostrar" class="opcion" href="visualizar-ventas/visualizar-ventas.php" id="visualizar-ventas"><i class="fi fi-rr-piggy-bank icon-opcion"></i>Visualizar ventas</a>
                 <a target="mostrar" class="opcion" href="visualizar-boleta/visualizar-boleta.html" id="visualizar-boletas"><i class="fi fi-rr-file-invoice icon-opcion"></i>Visualizar boletas</a>
             </div>
-            <div class="cerrar-sesion">
-                <a href="../cerrar-sesion/cerrarsesion.php" class="opcion"><i class="fi fi-rr-power icon-opcion"></i>Cerrar sesion</a>
+            <div class="cerrar-sesion" id="cerrar-sesion">
+                <a class="opcion" style="cursor: pointer;"><i class="fi fi-rr-power icon-opcion"></i>Cerrar sesion</a>
             </div>
 
         </div>
 
         <div class="iframe-perfil">
+
         <?php
             if ($_SESSION["cargo"] == 3){
-                
-                //Separamos el nombre y el apellido en variables diferentes;
-                $nombre_completo = explode(" ", $_SESSION["nombre_usuario"]);
-                $nombre_primeraInicial = substr($nombre_completo[0],0,1);
-                $apellido_primeraInicial = substr($nombre_completo[1],0,1);
+                if(isset($_SESSION['numero_caja'])){
+                    //Separamos el nombre y el apellido en variables diferentes;
+                    $nombre_completo = explode(" ", $_SESSION["nombre_usuario"]);
+                    $nombre_primeraInicial = substr($nombre_completo[0],0,1);
+                    $apellido_primeraInicial = substr($nombre_completo[1],0,1);
 
-                echo '
-                <div class="perfil">
-                    <div class="img-perfil">
-                        <p>'.$nombre_primeraInicial.'.'.$apellido_primeraInicial.'</p>
+                    echo '
+                    <div class="contenedor-perfil-caja">
+                        <div class="numero-caja">
+                            <p>Caja: <span class="n-caja">'.$_SESSION['numero_caja'].'</span></p>
+                        </div>
+
+                        <div class="perfil">
+                            <div class="img-perfil">
+                                <p>'.$nombre_primeraInicial.'.'.$apellido_primeraInicial.'</p>
+                            </div>
+                            <p class="nombre-usuario">'.$_SESSION["nombre_usuario"].'</p>
+                        </div>
                     </div>
-                    <p class="nombre-usuario">'.$_SESSION["nombre_usuario"].'</p>
-                </div>
-                
-                
-                ';
+                    ';
+                }
+
+                else{
+                    echo '<script>window.location.href = "seleccione-caja/seleccion-caja.php";</script>';
+
+                }
+
+
             }
-            
             else{
                 echo '<script>window.location.href = "../index.php";</script>';
             }
@@ -93,6 +123,16 @@
         $("#"+id).addClass("opcion-seleccionada");
 
         $antiguo_id = id;
+    
+    });
+
+    $('.cerrar-sesion').click(function(){
+        $.ajax({
+            url:'seleccione-caja/php/cambiarEstadoCaja.php',
+            success: function(res){
+                location.href ='../cerrar-sesion/cerrarsesion.php';
+            }
+        });
     
     });
 

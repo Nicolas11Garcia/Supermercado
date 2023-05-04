@@ -376,3 +376,125 @@ td{
     width: 700px;
     justify-content: space-between;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*MODAL*/
+.modal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    border: 0;
+    background: #111111bd;
+    height: 100%;
+    display: flex;
+
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+
+    transition: opacity .6s;
+
+}
+
+.modal--show{
+    opacity: 1;
+    pointer-events: unset;
+    
+}
+
+.modal__container{
+    position: relative;
+    padding: 20px;
+    height: 80%;
+    width: 90%;
+    overflow-y: scroll;
+    background: white;
+
+
+}
+
+
+.close{
+    top: 30px;
+    right: 30px;
+    position: absolute;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    
+    background-color: #ed2222;
+
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin: auto;
+
+    cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
+
+

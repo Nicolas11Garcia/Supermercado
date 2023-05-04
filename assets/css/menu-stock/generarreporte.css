@@ -1,11 +1,11 @@
 .item{
     display: flex;
-    width: 350px;
+    width: 450px;
     justify-content: space-between;
 }
 
 .producto-reporte{
-    width: 100px;
+    width: 150px;
 }
 
 .dato-producto{

@@ -13,7 +13,16 @@ $datos_producto = $dao->mostrarProductoPorId($id_producto);
 
 if(sizeof($datos_producto) >= 1){
     foreach ($datos_producto as $k) {
-        $dao->agregarAlDetalleTemportal($k->getId(),$k->getPrecioOferta(),$rut);
+
+        //Existe oferta?
+        if($k->getOferta() == 1){
+            $dao->agregarAlDetalleTemportal($k->getId(),$k->getPrecioOferta(),$rut);
+        }
+
+        //no existe? trabaja con el precio venta
+        else{
+            $dao->agregarAlDetalleTemportal($k->getId(),$k->getPrecioVenta(),$rut);
+        }
     }
 }
 

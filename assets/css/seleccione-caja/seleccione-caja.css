@@ -1,0 +1,182 @@
+* {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+/*--------VARIABLES--------*/
+:root {
+    --verde: #51AA1B;
+    --negro: black;
+    --plomo-boton: #EAEAEC;
+    --plomo-input: #B7B7B7;
+    --font: 'Poppins', sans-serif;
+    --tamaño-h2: 24px;
+}
+
+body{
+    font-family: var(--font);
+}
+
+
+
+.container{
+    width: 90%;
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+
+
+h2{
+    text-align: center;
+    margin-bottom: 25px;
+
+}
+
+
+section{
+    width: 100%;
+
+
+}
+
+
+.contenedor-cerar-sesion-perfil{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 80px;
+}
+
+
+.cerrar-sesion-caja{
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0;
+
+}
+
+.cerrar-sesion-caja i{
+    display: inline-block;
+}
+
+.cerrar-sesion-caja a{
+    font-size: 14px;
+    color: black;
+    text-decoration: none !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.contenedor-cajas{
+    display: flex;
+    gap: 20px;
+
+    flex-wrap: wrap;
+    display: flex;
+    justify-content: center;
+
+
+}
+
+.caja{
+    width: 240px;
+    height: 240px;
+
+    cursor: pointer;
+
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 20px;
+    
+}
+
+
+.caja .texto-estado{
+    font-size: 14px;
+}
+
+.texto-caja{
+    font-size: 30px;
+    line-height: 30px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.caja i{
+    font-size: 18px;
+}
+
+
+
+
+
+
+
+
+
+
+/*Estados*/
+.caja-disponible{
+    border: 2px solid var(--verde);
+    transition: 0.6s;
+    background: var(--verde);
+
+}
+
+.disponible{
+    color: white;
+}
+
+.caja-disponible:hover{
+    background: white;
+}
+.caja-disponible:hover .disponible{
+    color: var(--verde);
+}
+
+
+
+
+
+.caja-ocupada{
+    border: 2px solid #F0A430;
+}
+
+.ocupado{
+    color: #F0A430;
+}
+
+
+.caja-fuera-de-servicio{
+    border: 2px solid #E02A00;
+}
+
+.fuera-de-servicio{
+    color: #E02A00;
+}
+
+
+
+
+
+
+

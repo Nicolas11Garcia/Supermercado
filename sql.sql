@@ -254,6 +254,31 @@ CREATE TABLE reporte (
 );
 
 
+CREATE TABLE cajas (
+    id INT AUTO_INCREMENT,
+    estado VARCHAR(100),
+
+    PRIMARY KEY (id)
+);
+
+INSERT INTO cajas VALUES(NULL,'Disponible');
+INSERT INTO cajas VALUES(NULL,'Disponible');
+INSERT INTO cajas VALUES(NULL,'Ocupada');
+INSERT INTO cajas VALUES(NULL,'Disponible');
+INSERT INTO cajas VALUES(NULL,'Disponible');
+INSERT INTO cajas VALUES(NULL,'Ocupada');
+INSERT INTO cajas VALUES(NULL,'Disponible');
+INSERT INTO cajas VALUES(NULL,'Disponible');
+INSERT INTO cajas VALUES(NULL,'Fuera de servicio');
+INSERT INTO cajas VALUES(NULL,'Fuera de servicio');
+
+
+
+
+
+
+
+
 
 
 
