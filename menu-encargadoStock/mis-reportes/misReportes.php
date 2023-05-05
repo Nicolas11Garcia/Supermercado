@@ -21,7 +21,7 @@ $id_usuario = $_SESSION["id_usuario"]; //ID del usuario que mando el reporte:
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
@@ -34,6 +34,13 @@ $id_usuario = $_SESSION["id_usuario"]; //ID del usuario que mando el reporte:
     <link rel="stylesheet" href="../../assets/css/menu-stock/generarreporte.css">
 
     <title>Menu cajero - Kala</title>
+
+    <style>
+    .swal2-popup {
+      border: 2px solid black;
+      
+    }
+  </style>
 </head>
 <body>
 
@@ -112,31 +119,60 @@ $id_usuario = $_SESSION["id_usuario"]; //ID del usuario que mando el reporte:
 
 
     <script>
-            $('.btn-eliminar').click(function(){
-                if (confirm('¿deseas eliminar el reporte?')) {
-                    //Recuperar id del form
-                    var id_reporte = $(this).attr("id");
+$('.btn-eliminar').click(function(){
+    Swal.fire({
+        title: '¿Deseas eliminar el reporte?',
+        icon: 'warning',
+        backdrop: false,
+        allowOutsideClick: false,
+        showConfirmButton: true,
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        confirmButtonText: 'Eliminar',
+        cancelButtonColor: '#9fa3a9',
+        confirmButtonColor: '#FF6969',
+        customClass: {popup: 'my-swal-popup-class',}
+    
+    }).then((result) => {
+        if (result.isConfirmed) {
+            //Recuperar id del form
+            var id_reporte = $(this).attr("id");
 
-                    $.ajax({
-                        type:'POST',
-                        url:'php/eliminarReporte.php', //URL
-                        data: {id_reporte},
-                        success: function(data){
-                            respuesta = data.trim();
-                            console.log(respuesta);
+            $.ajax({
+                type:'POST',
+                url:'php/eliminarReporte.php', //URL
+                data: {id_reporte},
+                success: function(data){
+                    respuesta = data.trim();
+                    console.log(respuesta);
 
-                            if(respuesta == 'eliminado'){
-                                alert('Reporte Eliminado');
-                                window.location.href = "misReportes.php";
-                            }
-                            else if(respuesta == 'noEliminado'){
-                                alert ('El estado del reporte ya no esta pendiente de revision, por lo que no puede ser eliminado');
-                            }
-                        }
-                    }); 
+                    if(respuesta == 'eliminado'){
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Reporte eliminado',
+                            backdrop: false,
+                            showConfirmButton: false,
+                            timer: 1500,
+                            customClass: {
+                            popup: 'my-swal-popup-class',}
+                        }).then(() => {
+                            window.location.href = "misReportes.php";
+                        });
+                    }
+                    else if(respuesta == 'noEliminado'){
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'El estado del reporte ya no está pendiente de revisión, por lo que no puede ser eliminado',
+                            showConfirmButton: false,
+                            timer: 1500
+                        });
+                    }
                 }
             });
-    </script>
+        }
+    })
+});
+</script>
 
 
 </body>

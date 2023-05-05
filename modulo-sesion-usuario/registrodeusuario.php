@@ -1,58 +1,3 @@
-<?php
-    
-    // Función para validar RUT
-    function validarRut($rut) {
-        $rut = preg_replace('/[^k0-9]/i', '', $rut);
-        $dv  = substr($rut, -1);
-        $numero = substr($rut, 0, strlen($rut)-1);
-        $i = 2;
-        $suma = 0;
-        foreach(array_reverse(str_split($numero)) as $v)
-        {
-            if($i==8)
-            {
-                $i = 2;
-            }
-            $suma += $v * $i;
-            ++$i;
-        }
-        $dvr = 11 - ($suma % 11);
-        if($dvr == 11)
-        {
-            $dvr = 0;
-        }
-        if($dvr == 10)
-        {
-            $dvr = 'K';
-        }
-        if($dvr == strtoupper($dv))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    include('../php/class/Dao.php');
-
-    if(isset($_POST['button'])){
-        $rut = $_POST['rut'];
-        $correo = $_POST['correo'];
-        $nombre = $_POST['nombre'];
-        $apellido = $_POST['apellido'];
-        $contrasena = $_POST['contraseña'];
-
-        if (!validarRut($rut)) {
-            echo '<script>alert("El RUT ingresado no es válido");</script>';
-        } else {
-            $dao = new Dao();
-            $dao->registrar_cliente($rut,$correo,$nombre,$apellido,$contrasena);
-            echo '<script>window.location.href = "iniciarsesion.php";</script>';
-        }
-    }
-?>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -65,6 +10,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
   <!-- Link Swiper's CSS -->
@@ -83,6 +29,12 @@
 
     <title>Kala - Registro de usuarios</title>
 </head>
+
+
+
+
+
+
 <body>
     <div class="barra-primera">
         <div class="container">
@@ -381,6 +333,74 @@
         </div>
 
     </div>
+
+    <?php
+    
+    // Función para validar RUT
+    function validarRut($rut) {
+        $rut = preg_replace('/[^k0-9]/i', '', $rut);
+        $dv  = substr($rut, -1);
+        $numero = substr($rut, 0, strlen($rut)-1);
+        $i = 2;
+        $suma = 0;
+        foreach(array_reverse(str_split($numero)) as $v)
+        {
+            if($i==8)
+            {
+                $i = 2;
+            }
+            $suma += $v * $i;
+            ++$i;
+        }
+        $dvr = 11 - ($suma % 11);
+        if($dvr == 11)
+        {
+            $dvr = 0;
+        }
+        if($dvr == 10)
+        {
+            $dvr = 'K';
+        }
+        if($dvr == strtoupper($dv))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    include('../php/class/Dao.php');
+
+    if(isset($_POST['button'])){
+        $rut = $_POST['rut'];
+        $correo = $_POST['correo'];
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $contrasena = $_POST['contraseña'];
+
+        if (!validarRut($rut)) {
+            ?>
+            <script>
+                Swal.fire({
+                      title: 'El RUT ingresado no es válido, intente nuevamente.',
+                      icon: 'error',
+                      allowOutsideClick: false,
+                      showConfirmButton: true,
+                      confirmButtonText: 'Aceptar',
+                      confirmButtonColor: '#61C923',
+                    });
+            </script>
+            <?php
+        } else {
+            $dao = new Dao();
+            $dao->registrar_cliente($rut,$correo,$nombre,$apellido,$contrasena);
+            echo '<script>window.location.href = "iniciarsesion.php";</script>';
+        }
+    }
+?>
+
 
     <section class="main" id="main">
         <h2 class="titulo-h2">Registro de usuarios</h2>

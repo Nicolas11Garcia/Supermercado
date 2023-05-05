@@ -15,6 +15,7 @@ $dao = new DAO();
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
@@ -27,6 +28,13 @@ $dao = new DAO();
     <link rel="stylesheet" href="../../assets/css/menu-stock/ingresarproducto.css">
 
     <title>Menu cajero - Kala</title>
+
+    <style>
+    .swal2-popup {
+      border: 2px solid black;
+      
+    }
+  </style>
 </head>
 <body>
 
@@ -215,10 +223,24 @@ function loadFile(event) {
 
 //CUANDO APRETE INGRESAR
 $('#ingresar-producto').click(function(){
-            if (confirm('¿Estas seguro de ingresar el producto?')) {
                 
+                Swal.fire({
+                    title: '¿Estás seguro de que quieres ingresar este producto?',
+                    icon: 'warning',
+                    backdrop: false,
+                    allowOutsideClick: false,
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonText: 'Ingresar',
+                    cancelButtonColor: '#FF6969',
+                    confirmButtonColor: '#61C923',
+                    customClass: {
+                        popup: 'my-swal-popup-class',
+                      }
+                }).then((result) => {
+                if (result.isConfirmed) {
                 var datos = new FormData($("#Formulario")[0]);
-
                 $.ajax({
                     type:'POST',
                     url:'php/ingresarProducto.php',
@@ -226,15 +248,29 @@ $('#ingresar-producto').click(function(){
                     contentType: false,
                     processData: false,
                     success: function(datos){
-                        respuesta = datos.trim();
-
-                        if(respuesta == 'ingresado'){
-                            alert('Producto agregado correctamente');
-                            window.location.href= "ingresarProducto.php";
+                    respuesta = datos.trim();
+                        Swal.fire({
+                        title: 'Producto Ingresado Correctamente.',
+                        icon: 'success',
+                        backdrop: false,
+                        allowOutsideClick: false,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#61C923',
+                        customClass: {
+                            popup: 'my-swal-popup-class',
                         }
+                    }).then((result) => {
+                            if (result.isConfirmed) {
+                            window.location.href = 'ingresarProducto.php';
+                            }
+                        });
                     }
                 });
+
             }
+            });
+            
 });
 
 

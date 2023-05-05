@@ -10,7 +10,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
-
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
@@ -106,7 +107,17 @@
             }
             });
         } else {
-            alert("El RUT ingresado es inválido.");
+                    Swal.fire({
+                      title: 'El RUT ingresado no es válido, intente nuevamente.',
+                      icon: 'error',
+                      
+                      background: 'transparent',
+                      backdrop: false,
+                      allowOutsideClick: false,
+                      showConfirmButton: true,
+                      confirmButtonText: 'Aceptar',
+                      confirmButtonColor: '#61C923',
+                    });
         }
     });
 

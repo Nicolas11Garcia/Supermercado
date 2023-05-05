@@ -22,6 +22,7 @@ $_SESSION['rut'] = $rut;
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
@@ -132,7 +133,10 @@ $_SESSION['rut'] = $rut;
 
 
         }
-
+        .swal2-popup {
+        border: 2px solid black;
+      
+        }   
 
         @keyframes wave{
             0%,
@@ -441,8 +445,23 @@ $_SESSION['rut'] = $rut;
     });
 
     $('#cancelar-compra').click(function(){
-        if (confirm('Estas seguro cancelar la compra?')) {
-            $.ajax({
+
+        Swal.fire({
+                title: '¿Estas seguro de que quieres cancelar la compra?',
+                icon: 'warning',
+                backdrop: false,
+                allowOutsideClick: false,
+                showConfirmButton: true,
+                showCancelButton: true,
+                cancelButtonText: 'Cerrar',
+                confirmButtonText: 'Volver',
+                cancelButtonColor: '#9fa3a9',
+                confirmButtonColor: '#FF6969',
+                customClass: {popup: 'my-swal-popup-class',}
+    
+            }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
                 type:'POST',
                 url:'php/cancelarCompra.php', //URL
                 data: "", //no entrego ningun valor a php
@@ -451,6 +470,11 @@ $_SESSION['rut'] = $rut;
                 }
             });
         }
+        });    
+        
+
+            
+        
 
     });
 

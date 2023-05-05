@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
@@ -21,6 +22,13 @@
     <link rel="stylesheet" href="../../assets/css/menu-stock/generarreporte.css">
 
     <title>Menu cajero - Kala</title>
+
+    <style>
+    .swal2-popup {
+      border: 2px solid black;
+      
+    }
+  </style>
 </head>
 <body>
 
@@ -81,7 +89,24 @@
 
     //APRETO AGREGAR REPORTE
     $('#enviar-reporte').click(function(){
-        if (confirm('¿Estas seguro de enviar el reporte?')) {
+
+
+        Swal.fire({
+                title: '¿Estas seguro de enviar el reporte?',
+                icon: 'warning',
+                backdrop: false,
+                allowOutsideClick: false,
+                showConfirmButton: true,
+                showCancelButton: true,
+                cancelButtonText: 'Cancelar',
+                confirmButtonText: 'Enviar',
+                cancelButtonColor: '#FF6969',
+                confirmButtonColor: '#61C923',
+                customClass: {popup: 'my-swal-popup-class',}
+    
+            }).then((result) => {
+            if (result.isConfirmed) {
+
             var id_producto = $("#id_producto").val();
             var tipo_de_reporte = $("#tipo-de-reporte").val();
             var motivo = $("#motivo").val();
@@ -94,19 +119,32 @@
                 success: function(data){
                     respuesta = data.trim();
 
-                    //PHP me devuelve si fue editado y el numero de reporte
-                    datos_divididos = respuesta.split(":");
-                    numero_reporte = datos_divididos[1]; 
+                //PHP me devuelve si fue editado y el numero de reporte
+                datos_divididos = respuesta.split(":");
+                numero_reporte = datos_divididos[1]; 
 
-                    console.log(numero_reporte);
-                    console.log(datos_divididos[0]);
-                    if(datos_divididos[0] == "ingresado"){
-                        alert('Reporte enviado correctamente');
-                        window.location.href= "visualizarDetallesReporte.php?numero_reporte="+numero_reporte;
-                    }
+                console.log(numero_reporte);
+                console.log(datos_divididos[0]);   
+                Swal.fire({
+                    title: 'Reporte enviado correctamente.',
+                    icon: 'success',
+                    backdrop: false,
+                    allowOutsideClick: false,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#61C923',
+                    customClass: {
+                    popup: 'my-swal-popup-class',}
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                        window.location.href = "visualizarDetallesReporte.php?numero_reporte="+numero_reporte;
+                        }
+                    });
+                }
+            });    
                 }
             }); 
-        }
+        
 
     });
 </script>

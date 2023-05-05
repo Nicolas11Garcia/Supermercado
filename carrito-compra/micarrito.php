@@ -17,6 +17,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Link Swiper's CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
@@ -554,11 +555,22 @@
     <script>
     //ELIMINAR SIN ACTUALIZAR
             $('.eliminar_del_carrito_button').click(function(){
-                if (confirm('deseas eliminar este item del carrito?')) {
-                    //Recuperar id del form
-                    var id = $(this).attr("id");
-                    ///convertirlo en string
-                    var dataString = 'key_eliminar_item_carrito='+ id;
+                Swal.fire({
+                    title: '¿Estás seguro de que quieres eliminar el producto del carrito?',
+                    icon: 'warning',
+                    allowOutsideClick: false,
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonText: 'Eliminar',
+                    cancelButtonColor: '#9fa3a9',
+                    confirmButtonColor: '#FF6969',
+                }).then((result) => {
+                if (result.isConfirmed) {
+                //Recuperar id del form
+                var id = $(this).attr("id");
+                ///convertirlo en string
+                var dataString = 'key_eliminar_item_carrito='+ id;
 
                     $.ajax({
                         type:'POST',
@@ -572,7 +584,11 @@
 
                         }
                     }); 
-                }
+                    }
+                    });
+                
+                    
+                
             });
     </script>
 

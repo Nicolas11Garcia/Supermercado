@@ -49,6 +49,7 @@ foreach($lista_datos_producto_id as $k){
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
@@ -61,6 +62,14 @@ foreach($lista_datos_producto_id as $k){
     <link rel="stylesheet" href="../../assets/css/menu-stock/ingresarproducto.css">
 
     <title>Menu cajero - Kala</title>
+
+    <style>
+    .swal2-popup {
+      border: 2px solid black;
+      
+    }
+  </style>
+
 </head>
 <body>
 
@@ -320,24 +329,58 @@ function loadFile(event) {
 
 //CUANDO APRETE Editar
 $('#editar-producto').click(function(){
-            if (confirm('¿Estas seguro de editar el producto?')) {
-                var datos = new FormData($("#Formulario")[0]);
-                $.ajax({
-                    type:'POST',
-                    url:'php/editarProducto.php',
-                    data: datos,
-                    contentType: false,
-                    processData: false,
-                    success: function(datos){
-                        respuesta = datos.trim();
-                        console.log(respuesta);
-                        if(respuesta == 'editado'){
-                            alert('Producto editado correctamente');
-                            window.location.href= "gestionarProductos.php";
+
+
+                Swal.fire({
+                    title: '¿Estás seguro de que quieres Editar este producto?',
+                    icon: 'warning',
+                    backdrop: false,
+                    allowOutsideClick: false,
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonText: 'Sí, Editalo',
+                    cancelButtonColor: '#FF6969',
+                    confirmButtonColor: '#61C923',
+                    customClass: {
+                        popup: 'my-swal-popup-class',
+                      }
+                }).then((result) => {
+                if (result.isConfirmed) {
+                    var datos = new FormData($("#Formulario")[0]);
+                    $.ajax({
+                        type:'POST',
+                        url:'php/editarProducto.php',
+                        data: datos,
+                        contentType: false,
+                        processData: false,
+                        success: function(datos){
+                            respuesta = datos.trim();
+                            console.log(respuesta);
+                        Swal.fire({
+                        title: 'Producto Editado Correctamente.',
+                        icon: 'success',
+                        backdrop: false,
+                        allowOutsideClick: false,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Aceptar',
+                        confirmButtonColor: '#61C923',
+                        customClass: {
+                            popup: 'my-swal-popup-class',
                         }
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                            window.location.href = 'gestionarProductos.php';
+                            }
+                        });
+                            
+                        }
+                    });
                     }
-                });
-            }
+                    });
+    
+                
+            
 });
 
 

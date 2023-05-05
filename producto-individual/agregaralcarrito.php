@@ -58,7 +58,14 @@ foreach ($producto_url as $k) {
             //No existe? agregalo al carrito normalmente
             else{
                 $agregaralcarro = $dao->agregarAlCarro($id_cliente,$id_producto_url,$cantidad_seleccionada);
-                echo '<script>alert("Producto agregado al carrito")</script>';
+                echo "<script>
+                    Swal.fire({
+                      title: 'El producto se agrego al carrito correctamente.',
+                      icon: 'success',
+                      confirmButtonText: 'Aceptar',
+                      confirmButtonColor: '#61C923'
+                    })
+                    </script>";
             }
 
 
@@ -92,7 +99,14 @@ foreach ($producto_url as $k) {
                                         $_SESSION['cantidad'][$key_cantidad] = $cantidad_sumada_a_ingresar;
                                     }
                                     else{
-                                        echo 'La cantidad que deseas, excede nuestro stock';
+                                        echo "<script>
+                                        Swal.fire({
+                                          title: 'La cantidad que deseas, excede nuestro stock.',
+                                          icon: 'error',
+                                          confirmButtonText: 'Aceptar',
+                                          confirmButtonColor: '#61C923'
+                                        })
+                                        </script>";
                                         break;
                                     }
 
@@ -111,7 +125,15 @@ foreach ($producto_url as $k) {
     }
 
     else{
-        echo 'La cantidad que deseas, excede nuestro stock';
+        
+        echo "<script>
+        Swal.fire({
+          title: 'La cantidad que deseas, excede nuestro stock.',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#61C923'
+        })
+        </script>";
 
     }
 
