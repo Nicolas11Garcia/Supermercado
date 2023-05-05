@@ -107,7 +107,6 @@ $dao = new DAO();
             <tr>
                 <th class="titular-fila">Categoria</th>
                 <th class="titular-fila">Sub-Categoria</th>
-                <th class="titular-fila">Sub-Sub-Categorias Asociadas</th>
                 <th class="titular-fila"></th>
             </tr>
         </thead>
@@ -121,7 +120,6 @@ $dao = new DAO();
                 <tr class="producto-item">
                     <td style="width: 400px;">'.$k->getDescripcionCategoria().'</td>
                     <td style="width: 400px;">'.$k->getDescripcionSubCategoria().'</td>
-                    <td style="width: 400px;">0</td>
                     <td style="padding-left: 400px;">
                         <div class="botones-opciones">
                             <div class="editar boton-opcion">

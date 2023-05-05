@@ -11,7 +11,6 @@
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
-
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css'>
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css'>
@@ -39,7 +38,7 @@
         <div class="input-normal">
             <label class="label-input">Rut:</label>
             <div class="flex-rut-botones">
-                <input class="input-text" type="text" id="rut" placeholder="Ingrese Rut del cliente">
+                <input class="input-text" type="text" id="rut" onkeyup="formatRut(this)" placeholder="Ingrese Rut del cliente" maxlength="12">
                 <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="iniciar-compra">Iniciar compra</button>
             </div>
         </div>
@@ -83,31 +82,32 @@
 <script>
     $('#iniciar-compra').click(function(){
         var rut = document.getElementById('rut').value;
-        $.ajax({
+        if (validarRut(rut)) {
+            $.ajax({
             type:'POST',
-            url:'php/ingresoRut.php', //URL
+            url:'php/ingresoRut.php',
             data: {rut},
             success: function(res){
                 respuesta = res.trim();
                 console.log(respuesta);
                 if(respuesta >= 1){
-                    window.location.href= "procesoRealizarCompra.php?rut="+rut;
+                window.location.href= "procesoRealizarCompra.php?rut="+rut;
                 }
-                //SI EL CLIENTE NO EXISTE
                 else{
-                    const contenedor_agregar_cliente = document.getElementById("contenedor-agregar-cliente");
-                    $("#contenedor-agregar-cliente").removeClass("oculto");
-                    $("#contenedor-agregar-cliente").addClass("visible");
-                    $("#iniciar-compra").addClass("oculto");
-                    $("#advertencia-aviso").addClass("visible");
-                    $("#advertencia-aviso").removeClass("oculto");
-                    $("#advertencia-aviso").addClass("advertencia");
-                    $("#advertencia-aviso").css("height","84px");
+                const contenedor_agregar_cliente = document.getElementById("contenedor-agregar-cliente");
+                $("#contenedor-agregar-cliente").removeClass("oculto");
+                $("#contenedor-agregar-cliente").addClass("visible");
+                $("#iniciar-compra").addClass("oculto");
+                $("#advertencia-aviso").addClass("visible");
+                $("#advertencia-aviso").removeClass("oculto");
+                $("#advertencia-aviso").addClass("advertencia");
+                $("#advertencia-aviso").css("height","84px");
                 }
             }
-        });
-
-
+            });
+        } else {
+            alert("El RUT ingresado es inválido.");
+        }
     });
 
     $('#omitir-ingreso-cliente').click(function(){
@@ -146,25 +146,59 @@
 
 
 
-    document.getElementById('rut').addEventListener('input', function(evt) {
-    let value = this.value.replace(/\./g, '').replace('-', '');
-    
-    if (value.match(/^(\d{2})(\d{3}){2}(\w{1})$/)) {
-        value = value.replace(/^(\d{2})(\d{3})(\d{3})(\w{1})$/, '$1.$2.$3-$4');
-    }
-    else if (value.match(/^(\d)(\d{3}){2}(\w{0,1})$/)) {
-        value = value.replace(/^(\d)(\d{3})(\d{3})(\w{0,1})$/, '$1.$2.$3-$4');
-    }
-    else if (value.match(/^(\d)(\d{3})(\d{0,2})$/)) {
-        value = value.replace(/^(\d)(\d{3})(\d{0,2})$/, '$1.$2.$3');
-    }
-    else if (value.match(/^(\d)(\d{0,2})$/)) {
-        value = value.replace(/^(\d)(\d{0,2})$/, '$1.$2');
+    function formatRut(input) {
+        // Obtenemos el valor actual del input
+        let rut = input.value.replace(/\./g, '').replace(/\-/g, '');
+      
+        // Eliminamos cualquier caracter que no sea un número o una letra 'k' o 'K'
+        rut = rut.replace(/[^\dkK]/g, '');
+      
+        // Formateamos el RUT agregando puntos y guión
+        rut = rut.replace(/^(\d{1,2})(\d{3})(\d{3})([\dkK]{1})$/, '$1.$2.$3-$4');
+      
+        // Actualizamos el valor del input con el RUT formateado
+        input.value = rut;
     }
     
-    this.value = value;
-    });
-    
+
+    function validarRut(rut) {
+        var suma = 0;
+        var multiplo = 2;
+        var valor;
+        rut = rut.replace(".", "");
+        rut = rut.replace(".", "");
+        rut = rut.replace("-", "");
+        var cuerpo = rut.slice(0, -1);
+        var dv = rut.slice(-1).toUpperCase();
+        for (var i = cuerpo.length - 1; i >= 0; i--) {
+            suma += parseInt(cuerpo.charAt(i)) * multiplo;
+            if (multiplo < 7) {
+            multiplo += 1;
+            } else {
+            multiplo = 2;
+            }
+        }
+        valor = 11 - (suma % 11);
+        if (valor === 10) {
+            if (dv === "K" || dv === "k") {
+            return true;
+            } else {
+            return false;
+            }
+        } else if (valor === 11) {
+            if (dv === "0") {
+            return true;
+            } else {
+            return false;
+            }
+        } else {
+            if (parseInt(dv) === valor) {
+            return true;
+            } else {
+            return false;
+            }
+        }
+    }
 
     
 </script>

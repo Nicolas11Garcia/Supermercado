@@ -1,3 +1,59 @@
+<?php
+    
+    // Función para validar RUT
+    function validarRut($rut) {
+        $rut = preg_replace('/[^k0-9]/i', '', $rut);
+        $dv  = substr($rut, -1);
+        $numero = substr($rut, 0, strlen($rut)-1);
+        $i = 2;
+        $suma = 0;
+        foreach(array_reverse(str_split($numero)) as $v)
+        {
+            if($i==8)
+            {
+                $i = 2;
+            }
+            $suma += $v * $i;
+            ++$i;
+        }
+        $dvr = 11 - ($suma % 11);
+        if($dvr == 11)
+        {
+            $dvr = 0;
+        }
+        if($dvr == 10)
+        {
+            $dvr = 'K';
+        }
+        if($dvr == strtoupper($dv))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    include('../php/class/Dao.php');
+
+    if(isset($_POST['button'])){
+        $rut = $_POST['rut'];
+        $correo = $_POST['correo'];
+        $nombre = $_POST['nombre'];
+        $apellido = $_POST['apellido'];
+        $contrasena = $_POST['contraseña'];
+
+        if (!validarRut($rut)) {
+            echo '<script>alert("El RUT ingresado no es válido");</script>';
+        } else {
+            $dao = new Dao();
+            $dao->registrar_cliente($rut,$correo,$nombre,$apellido,$contrasena);
+            echo '<script>window.location.href = "iniciarsesion.php";</script>';
+        }
+    }
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -329,29 +385,11 @@
     <section class="main" id="main">
         <h2 class="titulo-h2">Registro de usuarios</h2>
         <form class="form-inicio-registro" action="" method="POST">
-        <?php
-        include('../php/class/Dao.php');
-
-        if(isset($_POST['button'])){
-
-                $dao = new Dao();
-
-                $rut = $_POST['rut'];
-                $correo = $_POST['correo'];
-                $nombre = $_POST['nombre'];
-                $apellido = $_POST['apellido'];
-                $contrasena = $_POST['contraseña'];
-
-                $dao->registrar_cliente($rut,$correo,$nombre,$apellido,$contrasena);
-                echo '<script>window.location.href = "iniciarsesion.php";</script>';
-
-                
-        }
-        ?>
+        
 
             <div class="elementos-input">
                 <label class="label-input">Rut:</label>
-                <input name="rut" class="input-text" type="text" placeholder="Ingrese su rut">
+                <input name="rut" class="input-text" id="rut" onkeyup="formatRut(this)" type="text" placeholder="Ingrese su rut"  maxlength="12">
             </div>
 
             <div class="elementos-input">
@@ -407,6 +445,20 @@
 } );
 
 splide.mount();
+
+    function formatRut(input) {
+        // Obtenemos el valor actual del input
+        let rut = input.value.replace(/\./g, '').replace(/\-/g, '');
+      
+        // Eliminamos cualquier caracter que no sea un número o una letra 'k' o 'K'
+        rut = rut.replace(/[^\dkK]/g, '');
+      
+        // Formateamos el RUT agregando puntos y guión
+        rut = rut.replace(/^(\d{1,2})(\d{3})(\d{3})([\dkK]{1})$/, '$1.$2.$3-$4');
+      
+        // Actualizamos el valor del input con el RUT formateado
+        input.value = rut;
+    }
   </script>
 </body>
 </html>

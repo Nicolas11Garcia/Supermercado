@@ -92,7 +92,7 @@ $dao = new DAO();
         </div>
 
         <div class="btn-div">
-            <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="agregar">Agregar Sub-Categoria</button>
+            <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="agregar">Agregar Sub-Sub-Categoria</button>
         </div>
 
 

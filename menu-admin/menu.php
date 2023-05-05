@@ -64,14 +64,16 @@
         <div class="panel">
             <div class="opciones-principales">
                 <img class="logo" src="../assets/imagenes/logo.jpg">
-                <a target="mostrar" class="opcion opcion-seleccionada" href="mis-reportes/misReportes.php" id="visualizar-reportes"><i class="fi fi-rr-file-medical-alt icon-opcion"></i>Mis reportes <span class="notificacion">
+                <a target="mostrar" class="opcion opcion-seleccionada" href="mis-reportes/misReportes.php" id="visualizar-reportes"><i class="fi fi-rr-file-medical-alt icon-opcion"></i>Mis reportes 
+                
                     <?php 
                     //IMPRIMIR NOTIFICACION
                     if($contador_pendiente_de_revision >= 1){
-                        echo $contador_pendiente_de_revision; 
+                        echo '<span class="notificacion">'.$contador_pendiente_de_revision.'';
+                    echo '</span>';
                     }
                     ?>
-                    </span></a>
+                </a>
             </div>
             <div class="cerrar-sesion">
                 <a href="../cerrar-sesion/cerrarsesion.php" class="opcion"><i class="fi fi-rr-power icon-opcion"></i>Cerrar sesion</a>
