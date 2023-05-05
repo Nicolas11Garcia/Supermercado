@@ -1,6 +1,7 @@
 <?php 
     include('../../php/class/Dao.php');
     $dao = new Dao();
+    session_start();
 ?>
 
 <!DOCTYPE html>
@@ -10,9 +11,13 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <link rel="shortcut icon" href="../assets/imagenes/iconKala.jpg" type="image/x-icon">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
 
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -35,12 +40,26 @@
             <a href="../../cerrar-sesion/cerrarsesion.php"><i class="fi fi-rr-power icon-opcion"></i>Cerrar sesion</a>
 
         </div>
-        <div class="perfil">
-            <div class="img-perfil">
-                <p>N.G</p>
-            </div>
-            <p class="nombre-usuario">Nicolás Garcia</p>
-        </div>
+
+        <?php
+                    //Separamos el nombre y el apellido en variables diferentes;
+                    $nombre_completo = explode(" ", $_SESSION["nombre_usuario"]);
+                    $nombre_primeraInicial = substr($nombre_completo[0],0,1);
+                    $apellido_primeraInicial = substr($nombre_completo[1],0,1);
+
+                    echo '
+                    <div class="perfil">
+                        <div class="img-perfil">
+                            <p>'.$nombre_primeraInicial.'.'.$apellido_primeraInicial.'</p>
+                        </div>
+                        <p class="nombre-usuario">'.$_SESSION["nombre_usuario"].'</p>
+                    </div>  
+                    
+                    
+                    ';
+
+        ?>
+
     </div>
 
 
@@ -99,7 +118,7 @@
 
 
 
-<script>
+    <script>
     $('.caja').click(function(){
         var numero_caja = $(this).attr("id");
 
@@ -115,7 +134,13 @@
                 }
 
                 else{
-                    alert('La caja no esta disponible');
+                    Swal.fire({
+                    title: "Caja no disponible",
+                    text: "Lo siento, la caja no está disponible en este momento.",
+                    icon: "error",
+                    confirmButtonText: 'Aceptar',
+                    confirmButtonColor: '#61C923'
+                    });
                 }
             }
         });

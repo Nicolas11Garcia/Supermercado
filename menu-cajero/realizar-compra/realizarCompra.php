@@ -111,8 +111,6 @@
                       title: 'El RUT ingresado no es válido, intente nuevamente.',
                       icon: 'error',
                       
-                      background: 'transparent',
-                      backdrop: false,
                       allowOutsideClick: false,
                       showConfirmButton: true,
                       confirmButtonText: 'Aceptar',
@@ -135,21 +133,35 @@
 
     $('#registrar-e-iniciar').click(function(){
         var rut = document.getElementById('rut').value;
+        if (validarRut(rut)) {
         var nombre = document.getElementById('nombre').value;
         var apellido = document.getElementById('apellido').value;
 
-        $.ajax({
-            type:'POST',
-            url:'php/ingresarCliente.php', //URL
-            data: {rut,nombre,apellido},
-            success: function(res){
-                respuesta = res.trim();
+            $.ajax({
+                type:'POST',
+                url:'php/ingresarCliente.php', //URL
+                data: {rut,nombre,apellido},
+                success: function(res){
+                    respuesta = res.trim();
 
-                if(respuesta >= 1){
-                    window.location.href= "procesoRealizarCompra.php?rut="+rut;
+                    if(respuesta >= 1){
+                        window.location.href= "procesoRealizarCompra.php?rut="+rut;
+                    }
                 }
-            }
-        });
+            });
+        }
+        else {
+                    Swal.fire({
+                      title: 'El RUT ingresado no es válido, intente nuevamente.',
+                      icon: 'error',
+                      
+                      backdrop: false,
+                      allowOutsideClick: false,
+                      showConfirmButton: true,
+                      confirmButtonText: 'Aceptar',
+                      confirmButtonColor: '#61C923',
+                    });
+        }
     });
 
 

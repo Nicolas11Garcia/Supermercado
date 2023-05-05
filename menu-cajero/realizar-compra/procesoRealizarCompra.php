@@ -133,10 +133,6 @@ $_SESSION['rut'] = $rut;
 
 
         }
-        .swal2-popup {
-        border: 2px solid black;
-      
-        }   
 
         @keyframes wave{
             0%,
@@ -198,7 +194,7 @@ $_SESSION['rut'] = $rut;
                     </div>
 
                     <div class="buscar-por-titulo">
-                        <button type="button" id="abrir-modal" class="btn buscar-por-nombre">Buscar por titulo</button>
+                        <button type="button" id="abrir-modal" class="btn buscar-por-nombre">Buscar por titulo o marca</button>
                     </div>
 
                 </div>
@@ -255,7 +251,7 @@ $_SESSION['rut'] = $rut;
     <section class="modal">
         <div class="modal__container">
             <div class="input-normal">
-                <label class="label-input">Buscar producto por titulo:</label>
+                <label class="label-input">Buscar producto por titulo o marca:</label>
                 <div class="flex-rut-botones">
                     <input onkeyup="mostrar()" class="input-text" type="text" id="titulo-producto" placeholder="Ingrese titulo del producto">
                 </div>
@@ -449,7 +445,6 @@ $_SESSION['rut'] = $rut;
         Swal.fire({
                 title: '¿Estas seguro de que quieres cancelar la compra?',
                 icon: 'warning',
-                backdrop: false,
                 allowOutsideClick: false,
                 showConfirmButton: true,
                 showCancelButton: true,
@@ -457,7 +452,6 @@ $_SESSION['rut'] = $rut;
                 confirmButtonText: 'Volver',
                 cancelButtonColor: '#9fa3a9',
                 confirmButtonColor: '#FF6969',
-                customClass: {popup: 'my-swal-popup-class',}
     
             }).then((result) => {
             if (result.isConfirmed) {
