@@ -161,11 +161,13 @@ class DAO{
 
         if($fila >=1){
             while($r = mysqli_fetch_array($resultado)){
+                $correo = $r['correo'];
                 $id = $r['id'];
+                $rut = $r['rut'];
                 $nombre = $r['nombre'];
                 $apellido = $r['apellido'];
 
-                $usuario = new Usuario($id,$rut,$nombre,$apellido);
+                $usuario = new Usuario($id,$correo,$rut,$nombre,$apellido);
                 $datos_usuario[] = $usuario;
 
             }
@@ -190,12 +192,13 @@ class DAO{
 
         if($fila >=1){
             while($r = mysqli_fetch_array($resultado)){
+                $correo = $r['correo'];
                 $id = $r['id'];
                 $rut = $r['rut'];
                 $nombre = $r['nombre'];
                 $apellido = $r['apellido'];
 
-                $usuario = new Usuario($id,$rut,$nombre,$apellido);
+                $usuario = new Usuario($id,$correo,$rut,$nombre,$apellido);
                 $datos_usuario[] = $usuario;
 
             }
@@ -209,10 +212,10 @@ class DAO{
     }
 
     //REGISTRAR CLIENTE
-    public function registrar_usuario_caja($rut,$nombre,$apellido){
+    public function registrar_usuario_caja($rut,$correo,$nombre,$apellido){
         $this->conectarBD();
     
-        $sql = "INSERT INTO usuarios VALUES(NULL,'$rut','','$nombre','$apellido','',1)";
+        $sql = "INSERT INTO usuarios VALUES(NULL,'$rut','$correo','$nombre','$apellido','',1)";
         $this->con->query($sql);
         $this->desconectorBD();
     
@@ -293,6 +296,15 @@ class DAO{
 
         else if(($fila == 1) && ($pass_compara == $pass_cf) && $buscar_pass_estado['fk_rol_id'] == 3){
             $lista_informacion[0] = 3; //rol
+            $lista_informacion[1] = $id_de_usuario;
+            $lista_informacion[2] = $nombre;
+            $lista_informacion[3] = $apellido;
+
+            return $lista_informacion;
+        }
+
+        else if(($fila == 1) && ($pass_compara == $pass_cf) && $buscar_pass_estado['fk_rol_id'] == 5){
+            $lista_informacion[0] = 5; //rol
             $lista_informacion[1] = $id_de_usuario;
             $lista_informacion[2] = $nombre;
             $lista_informacion[3] = $apellido;
@@ -525,10 +537,10 @@ class DAO{
     }
 
     //Agregar productos a detalle temporal de la orden
-    public function agregarAlDetalleTemportal($id_producto,$precio,$rut){
+    public function agregarAlDetalleTemportal($id_producto,$precio,$rut,$descuento_oferta){
         $this->conectarBD();
     
-        $sql = "INSERT INTO productos_detalle_boleta_temporal VALUES(NULL,$id_producto,$precio,'$rut')";
+        $sql = "INSERT INTO productos_detalle_boleta_temporal VALUES(NULL,$id_producto,$precio,'$rut',$descuento_oferta)";
         $this->con->query($sql);
         $this->desconectorBD();
     
@@ -538,13 +550,17 @@ class DAO{
     public function mostrarItemsDetalleBoleta($rut){
         $this->conectarBD();
 
-        $sql = "SELECT productos_detalle_boleta_temporal.id AS 'id_posicion', productos.id AS 'id_producto', productos.titulo, marcas.descripcion AS 'marca', 
-        productos_detalle_boleta_temporal.precio ,productos.informaciondelproducto,productos.imagen,
-        productos.activo,productos.oferta
+        $sql = "SELECT productos_detalle_boleta_temporal.id AS 'id_posicion', productos.id AS 'id_producto', 
+        productos.titulo, marcas.descripcion AS 'marca', productos_detalle_boleta_temporal.precio ,
+        productos.informaciondelproducto,productos.imagen, productos.activo,productos.oferta,
+        SUM(precio) 
+        as 'Subtotal', rut, COUNT(producto_id_fk) AS 'cantidad', SUM(productos_detalle_boleta_temporal.oferta) AS
+        'precio_oferta'
         FROM productos_detalle_boleta_temporal 
         INNER JOIN productos on productos.id = productos_detalle_boleta_temporal.producto_id_fk 
-        INNER JOIN marcas on marcas.id = productos.fk_marca_id
-        WHERE productos_detalle_boleta_temporal.rut = '$rut'";
+        INNER JOIN marcas on marcas.id = productos.fk_marca_id 
+        WHERE productos_detalle_boleta_temporal.rut = '$rut'
+        GROUP BY producto_id_fk";
 
         $resultado = $this->con->query($sql);
         $fila = mysqli_num_rows($resultado); //si hay filas
@@ -561,8 +577,10 @@ class DAO{
                 $imagen = $r['imagen'];
                 $activo = $r['activo'];
                 $oferta = $r['oferta'];
+                $cantidad = $r['cantidad'];
+                $precio_oferta = $r['precio_oferta'];
 
-                $item = new ProductosDetalleBoleta($id_posicion,$id_producto,$titulo,$marca,$precio,$imagen,$activo,$oferta);
+                $item = new ProductosDetalleBoleta($id_posicion,$id_producto,$titulo,$marca,$precio,$imagen,$activo,$oferta,$cantidad,$precio_oferta);
 
                 $lista_items_detalle_boleta[] = $item;
 
@@ -580,7 +598,7 @@ class DAO{
     public function borrarProductoDetalleTemportal($id_posicion){
         $this->conectarBD();
             
-        $sql = "DELETE FROM productos_detalle_boleta_temporal WHERE id = $id_posicion";
+        $sql = "DELETE FROM productos_detalle_boleta_temporal WHERE producto_id_fk = $id_posicion";
         $this->con->query($sql);
         $this->desconectorBD();
             
@@ -642,6 +660,25 @@ class DAO{
         else{
             return 0;
         }
+    }
+
+        //ACTUALIZAR DETALLE PARA OFERTA    
+    public function actualizarDetalleOferta($fk_producto,$precio_oferta){
+        $this->conectarBD();
+    
+        $sql = "UPDATE productos_detalle_boleta_temporal SET oferta = $precio_oferta WHERE producto_id_fk = $fk_producto" ;
+        $resultado = $this->con->query($sql);
+    
+        if($resultado){
+            return true;
+        }
+    
+        else{
+            return false;
+        }
+
+        $this->desconectorBD();
+
     }
 
     public function buscarDetalleSegunBoleta($id_boleta){
@@ -1301,6 +1338,219 @@ class DAO{
         $this->desconectorBD();
     
         return $lista;
+    }
+
+
+    //INGRESAR OFERTA DE 1 PRODUCTO
+    public function ingresarOferta1Producto($id_producto,$cantidad,$porcentaje){
+        $this->conectarBD();
+        $conexion = $this->con;
+
+        $sql = "INSERT INTO oferta_1_producto VALUES (NULL,$id_producto,$cantidad,$porcentaje)";
+        $conexion->query($sql);
+
+        $last_id = $conexion->insert_id; //obtener el ultimo id insertado para agregarle el detalle
+        return $last_id;
+
+        $conexion->desconectorBD();
+        $this->desconectorBD();
+
+    }
+
+
+    //MOSTRAR OFERTA 1 PRODUCTO
+    public function mostrarOferta1ProductoPorId($id){
+        $this->conectarBD();
+    
+        $sql = "SELECT productos.id, productos.titulo, marcas.descripcion AS 'marca',
+        productos.precioventa,productos.preciooferta,productos.stockcomprado,productos.stock_actual,
+        productos.imagen,productos.activo,productos.oferta, productos.visible, oferta_1_producto.cantidad,
+        oferta_1_producto.porcentaje
+        FROM productos 
+        INNER JOIN oferta_1_producto on oferta_1_producto.producto_id_fk = productos.id
+        INNER JOIN marcas on marcas.id = productos.fk_marca_id
+        WHERE oferta_1_producto.id = $id";
+        $resultado = $this->con->query($sql);
+    
+        $lista = array();
+    
+        while($r = mysqli_fetch_array($resultado)){
+            $id = $r['id'];
+            $titulo = $r['titulo'];
+            $marca = $r['marca'];
+            $precioventa = $r['precioventa'];
+            $preciooferta = $r['preciooferta'];
+            $stockcomprado = $r['stockcomprado'];
+            $stockactual = $r['stock_actual'];
+            $imagen = $r['imagen'];
+            $activo = $r['activo'];
+            $oferta = $r['oferta'];
+            $visible = $r['visible'];
+            $cantidad = $r['cantidad'];
+            $porcentaje = $r['porcentaje'];
+
+            $producto = new ProductoOferta1($id,$titulo,$marca,$precioventa,$preciooferta,$stockcomprado,$stockactual,$imagen,$activo,$oferta,$visible,$cantidad,$porcentaje);
+            $lista[] = $producto;
+        }
+        $this->desconectorBD();
+    
+        return $lista;
+    }
+
+    //MOSTRAR TODAS LAS OFERTA 1 PRODUCTO
+    public function mostrarOferta1Producto(){
+        $this->conectarBD();
+    
+        $sql = "SELECT productos.id, productos.titulo, marcas.descripcion AS 'marca',
+        productos.precioventa,productos.preciooferta,productos.stockcomprado,productos.stock_actual,
+        productos.imagen,productos.activo,productos.oferta, productos.visible, oferta_1_producto.cantidad,
+        oferta_1_producto.porcentaje
+        FROM productos 
+        INNER JOIN oferta_1_producto on oferta_1_producto.producto_id_fk = productos.id
+        INNER JOIN marcas on marcas.id = productos.fk_marca_id";
+        $resultado = $this->con->query($sql);
+    
+        $lista = array();
+    
+        while($r = mysqli_fetch_array($resultado)){
+            $id = $r['id'];
+            $titulo = $r['titulo'];
+            $marca = $r['marca'];
+            $precioventa = $r['precioventa'];
+            $preciooferta = $r['preciooferta'];
+            $stockcomprado = $r['stockcomprado'];
+            $stockactual = $r['stock_actual'];
+            $imagen = $r['imagen'];
+            $activo = $r['activo'];
+            $oferta = $r['oferta'];
+            $visible = $r['visible'];
+            $cantidad = $r['cantidad'];
+            $porcentaje = $r['porcentaje'];
+
+            $producto = new ProductoOferta1($id,$titulo,$marca,$precioventa,$preciooferta,$stockcomprado,$stockactual,$imagen,$activo,$oferta,$visible,$cantidad,$porcentaje);
+            $lista[] = $producto;
+        }
+        $this->desconectorBD();
+    
+        return $lista;
+    }
+
+
+
+    //INGRESAR OFERTA DE 2 PRODUCTOs
+    public function ingresarOferta2Productos($id_producto1,$id_producto2,$porcentaje){
+        $this->conectarBD();
+        $conexion = $this->con;
+
+        $sql = "INSERT INTO oferta_2_producto VALUES (NULL,$id_producto1,$id_producto2,$porcentaje)";
+        $conexion->query($sql);
+
+        $last_id = $conexion->insert_id; //obtener el ultimo id insertado para agregarle el detalle
+        return $last_id;
+
+        $conexion->desconectorBD();
+        $this->desconectorBD();
+
+    }
+
+        //MOSTRAR OFERTA 2 PRODUCTO por id
+    public function mostrarOferta2Productos($id){
+        $this->conectarBD();
+    
+        $sql = "SELECT * FROM oferta_2_producto  WHERE id= $id";
+        $resultado = $this->con->query($sql);
+    
+        $lista = array();
+    
+        while($r = mysqli_fetch_array($resultado)){
+            $id = $r['id'];
+            $producto_id_fk_1 = $r['producto_id_fk_1'];
+            $producto_id_fk_2 = $r['producto_id_fk_2'];
+            $porcentaje = $r['porcentaje'];
+
+            $producto = new ProductoOferta2($id,$producto_id_fk_1,$producto_id_fk_2,$porcentaje);
+            $lista[] = $producto;
+        }
+        $this->desconectorBD();
+    
+        return $lista;
+    }
+
+    //MOSTRAR OFERTA 2 PRODUCTO por id
+    public function mostrarOferta2ProductosAll(){
+        $this->conectarBD();
+    
+        $sql = "SELECT * FROM oferta_2_producto";
+        $resultado = $this->con->query($sql);
+    
+        $lista = array();
+    
+        while($r = mysqli_fetch_array($resultado)){
+            $id = $r['id'];
+            $producto_id_fk_1 = $r['producto_id_fk_1'];
+            $producto_id_fk_2 = $r['producto_id_fk_2'];
+            $porcentaje = $r['porcentaje'];
+
+            $producto = new ProductoOferta2($id,$producto_id_fk_1,$producto_id_fk_2,$porcentaje);
+            $lista[] = $producto;
+        }
+        $this->desconectorBD();
+    
+        return $lista;
+    }
+
+    //MOSTRAR TODAS LA ORDENES
+    public function mostrarTodasOrdenes(){
+        $this->conectarBD();
+    
+        $sql = "SELECT id, fk_cliente_fk, fecha, correo, nombre, apellido, rut, 
+        telefono, region, comuna, calle, numero, total, estado  
+        FROM orden ORDER BY id DESC";
+        $resultado = $this->con->query($sql);
+    
+        $lista = array();
+    
+        while($r = mysqli_fetch_array($resultado)){
+            $id_orden = $r['id'];
+            $fk_cliente = $r['fk_cliente_fk'];
+            $fecha = $r['fecha'];
+
+            $correo = $r['correo'];
+            $nombre = $r['nombre'];
+            $apellido = $r['apellido'];
+            $rut = $r['rut'];
+            $telefono = $r['telefono'];
+
+            $region = $r['region'];
+            $comuna = $r['comuna'];
+            $calle = $r['calle'];
+            $numero = $r['numero'];
+
+            $total =$r['total'];
+            $estado =$r['estado'];
+
+
+
+            $producto = new Orden($id_orden,$fk_cliente,$fecha,$correo,$nombre,$apellido,$rut,$telefono,$region,$comuna,$calle,$numero,$total,$estado);
+            $lista[] = $producto;
+        }
+        $this->desconectorBD();
+    
+        return $lista;
+    }
+
+
+    //Cambiar estado de orden
+    public function cambiarEstadoOrden($estado,$numero_orden){
+        $this->conectarBD();
+    
+        $sql = "UPDATE orden SET estado = '$estado'
+        WHERE id = $numero_orden";
+        
+        $this->con->query($sql);
+
+        $this->desconectorBD();
+
     }
 
     

@@ -1,7 +1,7 @@
 .item{
     display: flex;
     width: 450px;
-    justify-content: space-between;
+    gap: 20px;
 }
 
 .producto-reporte{

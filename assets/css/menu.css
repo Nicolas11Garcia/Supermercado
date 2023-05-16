@@ -22,8 +22,9 @@ body{
 
 .contenedor-iframe-div{
     height: 100vh;
-    width: 95%;
+    width: 100%;
     display: flex;
+
 }
 
 
@@ -48,8 +49,17 @@ body{
     justify-content: space-between;
     flex-direction: column;
 
+    position: relative;
+
     
 }
+
+
+
+
+
+
+
 
 
 .opciones-principales{
@@ -175,8 +185,8 @@ body{
     align-items: center;
     gap: 20px;
     justify-content: end;
-    margin-bottom: 20px;
-    margin-top: 20px;
+
+    height: 100px;
 }
 
 
@@ -186,5 +196,46 @@ iframe{
     border: none;
 }
 
+.contenedor-perfil-caja, .perfil{
+    position: relative;
+}
+
+.right{
+    position: relative;
+    width: 70px;
+}
 
 
+.backdrop{
+    background: #00000066;
+
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+
+}
+
+.backdrop-white{
+    background: white;
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.visible{
+    opacity: 1;
+    transition: 0.1s;
+    pointer-events: unset;
+}
+
+.visible-white{
+    opacity: 0.8;
+    transition: 0.1s;
+    pointer-events: unset;
+}
