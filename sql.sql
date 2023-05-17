@@ -18,7 +18,7 @@ INSERT INTO rol VALUES(NULL,'Cliente');
 INSERT INTO rol VALUES(NULL,'Admin');
 INSERT INTO rol VALUES(NULL,'Cajero');
 INSERT INTO rol VALUES(NULL,'Encargado de stock');
-
+INSERT INTO rol VALUES(NULL,'Encargado de Ventas');
 
 
 CREATE TABLE usuarios(
