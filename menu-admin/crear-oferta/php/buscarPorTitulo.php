@@ -3,12 +3,10 @@ include('../../../php/class/Dao.php');
 session_start();
 $dao = new DAO();
 
-
 $titulo_producto = $_POST['titulo_producto'];
 
 //Traemos los productos que contenga el mismo LIKE del titulo
 $lista_productos = $dao->mostrarProductosPorTitulo($titulo_producto);
-
 
 //IMPRIMIMOS TABLA
 echo '
@@ -25,8 +23,6 @@ echo '
                         <th class="titular-fila"></th>
                     </tr>
                 </thead>
-
-
 ';
 
 

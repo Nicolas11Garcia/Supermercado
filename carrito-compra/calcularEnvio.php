@@ -23,8 +23,15 @@ if (isset($_SESSION["nombre_usuario"]) == true){
         //HAY ITEMS EN EL CARRITO
         else if($items_dentro_de_carrito >= 1){
             foreach ($items_dentro_de_carrito as $k) {
-                $subtotal_item = $k->getPrecioOferta() * $k->getCantidadEnCarrito();
-                $subtotal_producto_individual = $k->getPrecioOferta() *  $k->getCantidadEnCarrito();
+                $precio = 0;
+                if($k->getOferta() == 1){
+                    $precio = $k->getPrecioOferta();
+                }
+                else{
+                    $precio = $k->getPrecioVenta();
+                }
+                $subtotal_item = $precio * $k->getCantidadEnCarrito();
+                $subtotal_producto_individual = $precio *  $k->getCantidadEnCarrito();
                 $subtotal_carrito = $subtotal_producto_individual + $subtotal_carrito;
             }
         }
@@ -42,7 +49,14 @@ else if((isset($_SESSION["nombre_usuario"]) == false)){
     foreach($_SESSION['id_productos_carrito'] as $key => $value){ //RECORRO TODOS MIS PRODUCTOS
         $lista_id_en_carrito = $dao->mostrarProductoPorId($value); //LISTA CON TODOS LOS VALORES DE LOS PRODUCTOS
         foreach ($lista_id_en_carrito as $k) { //RECORRO CADA PRODUCTO CON SU VALOR
-            $subtotal_producto_individual = $k->getPrecioOferta() *  $_SESSION["cantidad"][$key]; //["cantidad"][$key] key toma la posicion [0] = 2 cantidades
+            $precio = 0;
+            if($k->getOferta() == 1){
+                $precio = $k->getPrecioOferta();
+            }
+            else{
+                $precio = $k->getPrecioVenta();
+            }
+            $subtotal_producto_individual = $precio *  $_SESSION["cantidad"][$key]; //["cantidad"][$key] key toma la posicion [0] = 2 cantidades
             $subtotal_carrito = $subtotal_producto_individual + $subtotal_carrito;
         }
     }

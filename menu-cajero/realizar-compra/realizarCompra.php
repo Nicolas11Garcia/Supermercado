@@ -167,11 +167,9 @@ $dao = new DAO();
                             <?php
                             $lista_ofertas = $dao->mostrarOferta1Producto();
 
-                            $porcentaje_restante = 100;
-                            $precio_oferta_descuento = 0;
-
                             foreach($lista_ofertas as $k){
-                                $porcentaje_restante = $porcentaje_restante - $k->getPorcentaje();
+                                $precio_oferta_descuento = 0;
+                                $precio = 0;
 
                                 echo '
                                 <div class="splide__slide item-1-oferta">
@@ -183,18 +181,20 @@ $dao = new DAO();
                                         ';
 
                                         if($k->getOferta() == 1){
-                                            $precio_oferta_descuento = $k->getPrecioOferta() * $porcentaje_restante / 100;
+                                            $precio_oferta_descuento = $k->getPrecioOferta() * $k->getPorcentaje() / 100;
+                                            $precio = $k->getPrecioOferta();
                                         }
 
                                         else{
-                                            $precio_oferta_descuento = $k->getPrecioVenta() * $porcentaje_restante / 100;
+                                            $precio_oferta_descuento = $k->getPrecioVenta() * $k->getPorcentaje() / 100;
+                                            $precio = $k->getPrecioVenta();
                                         }
 
                                         echo '
 
-                                        <p class="oferta-precio">$'.number_format($precio_oferta_descuento, 0, ',', '.').'</p>
+                                        <p class="oferta-precio">$'.number_format($precio - $precio_oferta_descuento, 0, ',', '.').'</p>
                                         <p class="condicion-oferta">Llevando '.$k->getCantidad().' unidades</p>
-                                        <p class="pecio-normal">Precio normal: '.number_format($k->getPrecioVenta(), 0, ',', '.').'</p>
+                                        <p class="pecio-normal">Precio normal: '.number_format($precio, 0, ',', '.').'</p>
                                     </div>
                                 </div>
                                 
@@ -227,9 +227,9 @@ $dao = new DAO();
                                     echo '
                                         <img src="../../assets/imagenes/Productos/'.$l->getImagen().'">';
                                 
-                                foreach($lista_img_producto_1 as $l){
+                                foreach($lista_img_producto_2 as $l){
                                     echo '
-                                        <img src="../../assets/imagenes/Productos/1.jpg">
+                                        <img src="../../assets/imagenes/Productos/'.$l->getImagen().'">
                                         
                                         </div>';
 
@@ -328,36 +328,58 @@ splide2.mount();
 <script>
     $('#iniciar-compra').click(function(){
         var rut = document.getElementById('rut').value;
+        if (validarRut(rut)){
             $.ajax({
-            type:'POST',
-            url:'php/ingresoRut.php',
-            data: {rut},
-            success: function(res){
-                respuesta = res.trim();
-                console.log(respuesta);
-                if(respuesta >= 1){
-                window.location.href= "procesoRealizarCompra.php?rut="+rut;
+                type:'POST',
+                url:'php/ingresoRut.php',
+                data: {rut},
+                success: function(res){
+                    respuesta = res.trim();
+                    console.log(respuesta);
+                    if(respuesta >= 1){
+                    window.location.href= "procesoRealizarCompra.php?rut="+rut;
+                    }
+                    else{
+                    const contenedor_agregar_cliente = document.getElementById("contenedor-agregar-cliente");
+                    
+
+                    
+                    $('#rut-ofertas').height('100px');
+
+                    $("#ofertas").addClass("oculto");
+                    $("#ofertas").removeClass("visible");
+
+                    $("#contenedor-agregar-cliente").removeClass("oculto");
+                    $("#contenedor-agregar-cliente").addClass("visible");
+                    $("#iniciar-compra").addClass("oculto");
+                    $("#advertencia-aviso").addClass("visible");
+                    $("#advertencia-aviso").removeClass("oculto");
+                    $("#advertencia-aviso").addClass("advertencia");
+                    $("#advertencia-aviso").css("height","84px");
+                    }
                 }
-                else{
-                const contenedor_agregar_cliente = document.getElementById("contenedor-agregar-cliente");
-                
-
-                
-                $('#rut-ofertas').height('100px');
-
-                $("#ofertas").addClass("oculto");
-                $("#ofertas").removeClass("visible");
-
-                $("#contenedor-agregar-cliente").removeClass("oculto");
-                $("#contenedor-agregar-cliente").addClass("visible");
-                $("#iniciar-compra").addClass("oculto");
-                $("#advertencia-aviso").addClass("visible");
-                $("#advertencia-aviso").removeClass("oculto");
-                $("#advertencia-aviso").addClass("advertencia");
-                $("#advertencia-aviso").css("height","84px");
-                }
-            }
             });
+        }
+
+        else{
+            darOpacidad();
+
+            Swal.fire({
+            title: 'El RUT ingresado no es válido, intente nuevamente.',
+            icon: 'error',
+                    
+            showConfirmButton: true,
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#61C923',
+            }).then((result) => {
+                    if (result.isConfirmed) {
+                        ocultarOpacidad();
+                    }
+                });
+        }
+
+
+        
     });
 
     $('#omitir-ingreso-cliente').click(function(){
@@ -377,7 +399,7 @@ splide2.mount();
 
     $('#registrar-e-iniciar').click(function(){
         var rut = document.getElementById('rut').value;
-        if (validarRut(rut)) {
+        if (validarRut(rut)){
         var nombre = document.getElementById('nombre').value;
         var apellido = document.getElementById('apellido').value;
         var correo = document.getElementById('correo').value;
@@ -433,7 +455,7 @@ splide2.mount();
     }
     
 
-    function validarRut(rut) {
+    function validarRut(rut){
         var suma = 0;
         var multiplo = 2;
         var valor;

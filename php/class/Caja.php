@@ -5,7 +5,7 @@
         private $estado;
 
 
-        public function Caja($numero_caja,$estado){
+        public function __construct($numero_caja,$estado){
             $this->numero_caja = $numero_caja;
             $this->estado = $estado;
         }

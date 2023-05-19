@@ -53,6 +53,14 @@ foreach ($producto_url as $k) {
             //Existe el producto que quiere ingresar en el carrito? actualiza solo la cantidad
             if($id_encontrado >= 1){
                 $actualizar = $dao->actualizarCarrito($id_cliente,$id_producto_url,$cantidad_nueva_a_ingresar);
+                echo "<script>
+                Swal.fire({
+                  title: 'El producto se agrego al carrito correctamente.',
+                  icon: 'success',
+                  confirmButtonText: 'Aceptar',
+                  confirmButtonColor: '#61C923'
+                })
+                </script>";
             }
 
             //No existe? agregalo al carrito normalmente
@@ -76,6 +84,15 @@ foreach ($producto_url as $k) {
                 if(!isset($_SESSION["id_productos_carrito"])){
                     $_SESSION["id_productos_carrito"][] = $id_producto_url;
                     $_SESSION["cantidad"][] = $cantidad_seleccionada;
+
+                    echo "<script>
+                    Swal.fire({
+                      title: 'El producto se agrego al carrito correctamente.',
+                      icon: 'success',
+                      confirmButtonText: 'Aceptar',
+                      confirmButtonColor: '#61C923'
+                    })
+                    </script>";
                 }
                 //SI YA EXISTE LA SESION DEL CARRITO, AGREGA LOS NUEVOS PRODUCTOS ACA
                 else{
@@ -97,6 +114,15 @@ foreach ($producto_url as $k) {
                                     //SI LA CANTIDAD SUMADA QUE DESEA SUPERA EL STOCK ACTUAL
                                     if($cantidad_sumada_a_ingresar <= $stock_actual){
                                         $_SESSION['cantidad'][$key_cantidad] = $cantidad_sumada_a_ingresar;
+
+                                        echo "<script>
+                                        Swal.fire({
+                                          title: 'El producto se agrego al carrito correctamente.',
+                                          icon: 'success',
+                                          confirmButtonText: 'Aceptar',
+                                          confirmButtonColor: '#61C923'
+                                        })
+                                        </script>";
                                     }
                                     else{
                                         echo "<script>
@@ -116,9 +142,18 @@ foreach ($producto_url as $k) {
                     }
 
                     if($existe_producto == 0){
-                                    //Si no existe el producto en el carrito
+                        //Si no existe el producto en el carrito
                         $_SESSION["id_productos_carrito"][] = $id_producto_url;
                         $_SESSION["cantidad"][] = $cantidad_seleccionada;
+
+                        echo "<script>
+                        Swal.fire({
+                          title: 'El producto se agrego al carrito correctamente.',
+                          icon: 'success',
+                          confirmButtonText: 'Aceptar',
+                          confirmButtonColor: '#61C923'
+                        })
+                        </script>";
                     }
             }
         }

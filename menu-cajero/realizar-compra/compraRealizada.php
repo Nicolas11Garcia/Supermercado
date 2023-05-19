@@ -5,7 +5,6 @@ $dao = new DAO();
 
 $boleta = $_GET['boleta'];
 
-
 ?>
 
 
@@ -105,7 +104,7 @@ $boleta = $_GET['boleta'];
                     <td class="titulo">'.$k->getTitulo().'</td>
                     <td >'.$k->getMarca().'</td>
                     <td >'.number_format($k->getPrecio(), 0, ',', '.').'</span></td>
-                    <td>1</td>
+                    <td>'.$k->getCantidad().'</td>
                 </tr>
                 
                 ';

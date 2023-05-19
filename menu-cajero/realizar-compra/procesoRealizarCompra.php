@@ -54,7 +54,6 @@ $_SESSION['rut'] = $rut;
             position: relative;
 
         }
-
         .loader{
             position: absolute;
             width: 94%;
@@ -164,23 +163,33 @@ $_SESSION['rut'] = $rut;
 
             $nombre = "";
             $apellido = "";
+            $correo = "";
             $id = "";
 
             foreach ($datos_cliente as $k) {
                 $nombre = $k->getNombre();
                 $apellido =  $k->getApellido();
+                $correo =   $k->getCorreo();
                 $_SESSION['id_cliente_caja'] = $k->getId();
             }
 
         ?>
-            <div class="input-normal">
+            <div class="flex">
                 <p class="label-input">Rut: <span class="span-plomo"><?php echo $rut ?></span></p>
             </div>
+
+
 
             <div class="flex">
                 <p class="label-input">Nombre: <span class="span-plomo"><?php echo $nombre ?></span></p>
                 <p class="label-input">Apellido: <span class="span-plomo"><?php echo $apellido ?></span></p>
+
             </div>
+
+            <div class="flex">
+                <p class="label-input">Correo: <span class="span-plomo"><?php echo $correo ?></span></p>
+            </div>
+
         </div>
 
         <form class="form-id-producto">
@@ -214,6 +223,7 @@ $_SESSION['rut'] = $rut;
                     <th class="titular-fila">Marca</th>
                     <th class="titular-fila">Precio unitario</th>
                     <th class="titular-fila">Cantidad</th>
+                    <th class="titular-fila">Subtotal</th>
                     <th class="titular-fila"></th>
                 </tr>
             </thead>
@@ -224,10 +234,16 @@ $_SESSION['rut'] = $rut;
 
         </div>
 
-        <div class="total-contenedor">
-            <p id="total-general">Total: $0</p>
-            <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="pagar">Pagar</button>
+        <div class="total-contenedor" style="flex-direction: column; float:right; margin-top:20px; margin-left:60px;">
+            <div style="margin-left:20px; flex-direction: column; margin-bottom: 15px; display:flex; justify-content: center;align-items: center;">
+                <p style="font-size:14px;" id="sub-total">Subtotal: $</p>
+                <p style="font-size:14px;" id="iva">Iva: $990</p>
+            </div>
 
+            <div style="display:flex; justify-content: center;align-items: center;">
+                <p id="total-general">$0</p>
+                <button type="button" class="btn btn-iniciar-compra margin-btn btnhover" id="pagar">Pagar</button>
+            </div>
         </div>
     </div>
     <div class="loader oculto" id="loader">
@@ -291,9 +307,44 @@ $_SESSION['rut'] = $rut;
 
 
 <script>
+    function darOpacidad(){
+            var backdrop = parent.document.getElementById('backdrop');
+            var backdrop_up = parent.document.getElementById('backdrop-up');
+            var backdrop_right = parent.document.getElementById('backdrop-right');
+
+            var backwhite = parent.document.getElementById('backwhite');
+            var backwhite_up = parent.document.getElementById('backwhite-up');
+            var backwhite_right = parent.document.getElementById('backwhite-right');
+
+            backdrop.classList.add('visible');
+            backdrop_up.classList.add('visible');
+            backdrop_right.classList.add('visible');
+        }
+
+        function ocultarOpacidad(){
+            var backdrop = parent.document.getElementById('backdrop');
+            var backdrop_up = parent.document.getElementById('backdrop-up');
+            var backdrop_right = parent.document.getElementById('backdrop-right');
+
+            var backwhite = parent.document.getElementById('backwhite');
+            var backwhite_up = parent.document.getElementById('backwhite-up');
+            var backwhite_right = parent.document.getElementById('backwhite-right');
+
+            backdrop.classList.remove('visible');
+            backdrop_up.classList.remove('visible');
+            backdrop_right.classList.remove('visible');
+    }
+
+
+
+
+
+
+
     $('#abrir-modal').click(function(){
         const modal = document.querySelector('.modal');
         modal.classList.add("modal--show");
+        darOpacidad();
 
     });
 
@@ -323,26 +374,38 @@ $_SESSION['rut'] = $rut;
                                 $("#tabla").html(res);
                                 trim = res.trim();
                                 obtenerTotal();
+                                ocultarOpacidad();
                                 $('.modal').removeClass('modal--show');
 
                                  //ELIMINAR SIN ACTUALIZAR   
                                  //TRABAJO ACA PORQUE EL CODIGO VIENE DESPUES DE HACER CLIC, NO LEE EL CODIGO ANTES
                                 $('.btn-eliminar').click(function(){
-                                    if (confirm('Estas seguro de eliminar el producto?')) {
-                                        //Recuperar id del form
-                                        var id_posicion_eliminar = $(this).attr("id");
-                                        ///convertirlo en string
-                                        $.ajax({
-                                            type:'POST',
-                                            url:'php/eliminarProductoDetalle.php', //URL
-                                            data: {id_posicion_eliminar},
-                                            success: function(data)
-                                            {
-                                                $("#item-producto" + id_posicion_eliminar).hide("slow");
-                                                obtenerTotal();
-                                            }
-                                        }); 
-                                    }
+                                    darOpacidad();
+
+                                    Swal.fire({
+                                    title: '¿Estás seguro de eliminar el producto?',
+                                    icon: 'error',
+                                            
+                                    showConfirmButton: true,
+                                    confirmButtonText: 'Aceptar',
+                                    confirmButtonColor: '#61C923',
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                    var id_posicion_eliminar = $(this).attr("id");
+                                    ///convertirlo en string
+                                    $.ajax({
+                                        type:'POST',
+                                        url:'php/eliminarProductoDetalle.php', //URL
+                                        data: {id_posicion_eliminar},
+                                        success: function(data)
+                                        {
+                                            $("#item-producto" + id_posicion_eliminar).hide("slow");
+                                            obtenerTotal();
+                                        }
+                                    }); 
+                                            ocultarOpacidad();
+                                        }
+                                    });
                                 });
                             }
                         });
@@ -350,9 +413,6 @@ $_SESSION['rut'] = $rut;
 
 
                     });
-
-
-
             }
         });
         
@@ -364,15 +424,16 @@ $_SESSION['rut'] = $rut;
     $('#cerrar-modal').click(function(){
         const modal = document.querySelector('.modal');
         modal.classList.remove("modal--show");
+
+        ocultarOpacidad();
+
     });
 
-</script>
 
 
 
 
 
-<script>
     //AGREGAALCARRITO SIN ACTUALIZAR /*
     $('#agregar-producto').click(function(){
                 var id_producto = document.getElementById('id_producto').value;
@@ -385,39 +446,64 @@ $_SESSION['rut'] = $rut;
                         trim = res.trim();
                         obtenerTotal();
 
-
+                        $('#id_producto').val(''); //Limpiamos input
                         //ELIMINAR SIN ACTUALIZAR   //TRABAJO ACA PORQUE EL CODIGO VIENE DESPUES DE HACER CLIC, NO LEE EL CODIGO ANTES
                         $('.btn-eliminar').click(function(){
-                            if (confirm('Estas seguro de eliminar el producto?')) {
-                                //Recuperar id del form
-                                var id_posicion_eliminar = $(this).attr("id");
-                                ///convertirlo en string
-                                $.ajax({
-                                    type:'POST',
-                                    url:'php/eliminarProductoDetalle.php', //URL
-                                    data: {id_posicion_eliminar},
-                                    success: function(data)
-                                    {
-                                        $("#item-producto" + id_posicion_eliminar).hide("slow");
-                                        obtenerTotal();
-                                    }
-                                }); 
-                            }
+                            darOpacidad();
+
+Swal.fire({
+title: '¿Estás seguro de eliminar el producto?',
+icon: 'error',
+        
+showConfirmButton: true,
+confirmButtonText: 'Aceptar',
+confirmButtonColor: '#61C923',
+}).then((result) => {
+    if (result.isConfirmed) {
+var id_posicion_eliminar = $(this).attr("id");
+///convertirlo en string
+$.ajax({
+    type:'POST',
+    url:'php/eliminarProductoDetalle.php', //URL
+    data: {id_posicion_eliminar},
+    success: function(data)
+    {
+        $("#item-producto" + id_posicion_eliminar).hide("slow");
+        obtenerTotal();
+    }
+}); 
+        ocultarOpacidad();
+    }
+});
                         });
 
                         window.scrollTo(0, document.body.scrollHeight);
                     }
+
+
         });
 
     });
-
     function obtenerTotal(){
         $.ajax({
                 type:'POST',
                 url:'php/calcularTotal.php', //URL
                 data: "", //no entrego ningun valor a php
                 success: function(res){
-                    $("#total-general").html(res);
+                    trim = res.trim(":");
+                    split = trim.split(":");
+
+                    console.log(split[0]);
+                    console.log(split[1]);
+                    console.log(split[2]);
+
+                    if(split[0] != 0){
+                        $("#sub-total").html('Subtotal: ' + split[0]);
+                        $("#iva").html('Iva(%19): ' + split[1]);
+                        $("#total-general").html('Total: '+split[2]);
+
+                    }
+
                 }
         });
     }
@@ -425,7 +511,6 @@ $_SESSION['rut'] = $rut;
     $('#pagar').click(function(){
         var loader = document.getElementById('loader');
         $("#loader").removeClass("oculto");
-
         $.ajax({
                 type:'POST',
                 url:'php/insertarCompra.php', //URL
@@ -434,13 +519,31 @@ $_SESSION['rut'] = $rut;
                     $("#respuesta").html(res);
                     setTimeout(function(){
                         window.location.href= "compraRealizada.php?boleta="+res;
-                    }, 4000);
+
+                        correo = "<?php echo $correo ?>";
+                        nombre = "<?php echo $nombre ?>";
+                        apellido = "<?php echo $apellido ?>";
+                        rut = "<?php echo $rut ?>";
+
+                        $.ajax({
+                                type:'POST',
+                                url:'php/enviarCorreoCaja.php', //URL
+                                data: {correo,nombre,apellido,rut},
+                                success: function(res){
+                                    console.log(res);
+
+                                }
+                        });
+
+
+                    }, 6000);
 
                 }
         });
     });
 
     $('#cancelar-compra').click(function(){
+        darOpacidad();
 
         Swal.fire({
                 title: '¿Estas seguro de que quieres cancelar la compra?',
@@ -448,29 +551,74 @@ $_SESSION['rut'] = $rut;
                 allowOutsideClick: false,
                 showConfirmButton: true,
                 showCancelButton: true,
-                cancelButtonText: 'Cerrar',
-                confirmButtonText: 'Volver',
+                cancelButtonText: 'No',
+                confirmButtonText: 'Si cancelar',
                 cancelButtonColor: '#9fa3a9',
                 confirmButtonColor: '#FF6969',
     
             }).then((result) => {
             if (result.isConfirmed) {
+                ocultarOpacidad();
                 $.ajax({
                 type:'POST',
                 url:'php/cancelarCompra.php', //URL
                 data: "", //no entrego ningun valor a php
-                success: function(res){
-                    window.location.href= "realizarCompra.php";
-                }
-            });
-        }
+                    success: function(res){
+                        window.location.href= "realizarCompra.php";
+                    }
+                });
+            }
+
+            else{
+                ocultarOpacidad();
+            }
         });    
-        
-
-            
-        
-
+    
     });
+
+
+
+    function darOpacidad(){
+            var backdrop = parent.document.getElementById('backdrop');
+            var backdrop_up = parent.document.getElementById('backdrop-up');
+            var backdrop_right = parent.document.getElementById('backdrop-right');
+
+            backdrop.classList.add('visible');
+            backdrop_up.classList.add('visible');
+            backdrop_right.classList.add('visible');
+        }
+
+        function ocultarOpacidad(){
+            var backdrop = parent.document.getElementById('backdrop');
+            var backdrop_up = parent.document.getElementById('backdrop-up');
+            var backdrop_right = parent.document.getElementById('backdrop-right');
+
+            backdrop.classList.remove('visible');
+            backdrop_up.classList.remove('visible');
+            backdrop_right.classList.remove('visible');
+    }
+
+
+
+    function darOpacidadWhite(){
+            var backwhite = parent.document.getElementById('backwhite');
+            var backwhite_up = parent.document.getElementById('backwhite-up');
+            var backwhite_right = parent.document.getElementById('backwhite-right');
+
+            backwhite.classList.add('visible-white');
+            backwhite_up.classList.add('visible-white');
+            backwhite_right.classList.add('visible-white');
+        }
+
+        function ocultarOpacidadWhite(){
+            var backwhite = parent.document.getElementById('backwhite');
+            var backwhite_up = parent.document.getElementById('backwhite-up');
+            var backwhite_right = parent.document.getElementById('backwhite-right');
+
+            backwhite.classList.remove('visible-white');
+            backwhite_up.classList.remove('visible-white');
+            backwhite_right.classList.remove('visible-white');
+    }
 
 </script>
 </body>

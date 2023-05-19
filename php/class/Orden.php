@@ -20,7 +20,7 @@
         private $estado;
 
 
-        public function Orden($numero_orden,$id_cliente,$fecha,$correo,$nombre,$apellido,$rut,$telefono,$region,$comuna,$calle,$numero,$total,$estado){
+        public function __construct($numero_orden,$id_cliente,$fecha,$correo,$nombre,$apellido,$rut,$telefono,$region,$comuna,$calle,$numero,$total,$estado){
             $this->numero_orden = $numero_orden;
             $this->id_cliente = $id_cliente;
             $this->fecha = $fecha;

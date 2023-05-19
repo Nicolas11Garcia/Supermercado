@@ -18,8 +18,17 @@ $lista_datos_id_producto = $dao->mostrarProductoPorId($id_actualizar);
 
 foreach ($lista_datos_id_producto as $k) {
     $stock_actual_producto_a_editar = $k->getStockActual();
-    $precio_oferta = $k->getPrecioOferta();
-    break;
+
+    if($k->getOferta() == 1){
+        $precio_oferta = $k->getPrecioOferta();
+        break;
+    }
+    else{
+        $precio_oferta = $k->getPrecioVenta();
+        break;
+    }
+
+
 }
 
 //Validamos que la nueva cantidad no supere al stock
@@ -35,8 +44,15 @@ if($cantidad_nueva <= $stock_actual_producto_a_editar){
         foreach ($items_dentro_de_carrito as $k) {
             //Si desea agregar otra cantidad de un producto que ya esta en el carrito, que se sume la nueva cantidad con la cantidad que ya existe en el carrito
             if($k->getId() == $id_actualizar){ 
+                $subtotal_item = 0;
                 $actualizar = $dao->actualizarCarrito($id_cliente,$id_actualizar,$cantidad_nueva);
-                $subtotal_item = $k->getPrecioOferta() * $cantidad_nueva;
+
+                if($k->getOferta() == 1){
+                    $subtotal_item = $k->getPrecioOferta() * $cantidad_nueva;
+                }
+                else{
+                    $subtotal_item = $k->getPrecioVenta() * $cantidad_nueva;
+                }
                 echo '$'.number_format($subtotal_item, 0, ',', '.')."";
                 break;
             }

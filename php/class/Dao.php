@@ -594,11 +594,53 @@ class DAO{
         }
     }
 
+        //MOSTRAMOS TODOS LOS PRODUCTOS NO GROUP BY
+    public function mostrarItemsDetalleBoletaNoGroupBy($rut){
+        $this->conectarBD();
+
+        $sql = "SELECT productos_detalle_boleta_temporal.id AS 'id_posicion', productos.id AS 'id_producto', 
+        productos.titulo, marcas.descripcion AS 'marca', productos_detalle_boleta_temporal.precio ,
+        productos.informaciondelproducto,productos.imagen, productos.activo,productos.oferta, productos_detalle_boleta_temporal.rut
+        FROM productos_detalle_boleta_temporal 
+        INNER JOIN productos on productos.id = productos_detalle_boleta_temporal.producto_id_fk 
+        INNER JOIN marcas on marcas.id = productos.fk_marca_id 
+        WHERE productos_detalle_boleta_temporal.rut = '$rut'";
+
+        $resultado = $this->con->query($sql);
+        $fila = mysqli_num_rows($resultado); //si hay filas
+
+        $lista_items_detalle_boleta = array();
+
+        if($fila >=1){
+            while($r = mysqli_fetch_array($resultado)){
+                $id_posicion = $r['id_posicion'];
+                $id_producto = $r['id_producto'];
+                $titulo = $r['titulo'];
+                $marca = $r['marca'];
+                $precio = $r['precio'];
+                $imagen = $r['imagen'];
+                $activo = $r['activo'];
+                $oferta = $r['oferta'];
+
+                $item = new ProductosDetalleBoleta2($id_posicion,$id_producto,$titulo,$marca,$precio,$imagen,$activo,$oferta);
+
+                $lista_items_detalle_boleta[] = $item;
+
+            }
+            $this->desconectorBD();
+            return $lista_items_detalle_boleta;
+        }
+
+        else{
+            return 0;
+        }
+    }
+
     //BORRAR Producto de
     public function borrarProductoDetalleTemportal($id_posicion){
         $this->conectarBD();
             
-        $sql = "DELETE FROM productos_detalle_boleta_temporal WHERE producto_id_fk = $id_posicion";
+        $sql = "DELETE FROM productos_detalle_boleta_temporal WHERE id = $id_posicion";
         $this->con->query($sql);
         $this->desconectorBD();
             
@@ -684,7 +726,11 @@ class DAO{
     public function buscarDetalleSegunBoleta($id_boleta){
         $this->conectarBD();
 
-        $sql = "SELECT productos.id AS 'id_producto', productos.titulo,marcas.descripcion AS 'marca',detalle_boleta.precio,productos.imagen, detalle_boleta.cantidad FROM productos INNER JOIN detalle_boleta on productos.id = detalle_boleta.producto_id_fk INNER JOIN marcas on marcas.id = productos.fk_marca_id
+        $sql = "SELECT productos.id AS 'id_producto', productos.titulo,marcas.descripcion AS 'marca',
+        detalle_boleta.precio,productos.imagen, detalle_boleta.cantidad 
+        FROM productos 
+        INNER JOIN detalle_boleta on productos.id = detalle_boleta.producto_id_fk 
+        INNER JOIN marcas on marcas.id = productos.fk_marca_id
         WHERE detalle_boleta.fk_boleta_id = $id_boleta";
         $resultado = $this->con->query($sql);
 

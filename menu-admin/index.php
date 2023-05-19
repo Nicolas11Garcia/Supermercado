@@ -65,7 +65,7 @@
         <div class="panel">
             <div class="opciones-principales">
                 <img class="logo" src="../assets/imagenes/logo.jpg">
-                <a target="mostrar" class="opcion opcion-seleccionada" href="crear-oferta/crearoferta.html" id="crear-oferta"><i class="fi fi-rr-file-medical-alt icon-opcion"></i>Crear Oferta </a>
+                <a target="mostrar" class="opcion opcion-seleccionada" href="crear-oferta/crearoferta.php" id="crear-oferta"><i class="fi fi-rr-file-medical-alt icon-opcion"></i>Crear Oferta </a>
                 <a target="mostrar" class="opcion " href="mis-reportes/misReportes.php" id="visualizar-reportes"><i class="fi fi-rr-file-medical-alt icon-opcion"></i>Mis reportes 
                 
                     <?php 
@@ -76,9 +76,16 @@
                     }
                     ?>
                 </a>
+                <a target="mostrar" class="opcion" href="../menu-encargadoVentas/ordenes/ordenes.php" id="crear-oferta"><i class="fi fi-rr-file-medical-alt icon-opcion"></i>Ordenes</a>
+                <a target="mostrar" class="opcion" href="../menu-encargadoVentas/visualizar-ventas/visualizar-ventas.php" id="crear-oferta2"><i class="fi fi-rr-file-medical-alt icon-opcion"></i>Visualizar ventas</a>
+                <a target="mostrar" class="opcion" href="../menu-encargadoStock/gestionar-productos/gestionarProductos.php" id="gestionar-productos"><i class="fi fi-rr-box-open icon-opcion"></i>Gestionar productos</a>
+                <a target="mostrar" class="opcion" href="../menu-encargadoStock/ingresar-producto/ingresarProducto.php" id="ingresar-productos"><i class="fi fi-rr-plus icon-opcion"></i>Ingresar productos</a>
             </div>
             <div class="cerrar-sesion">
                 <a href="../cerrar-sesion/cerrarsesion.php" class="opcion"><i class="fi fi-rr-power icon-opcion"></i>Cerrar sesion</a>
+            </div>
+
+            <div class="backdrop" id="backdrop">
             </div>
 
         </div>
@@ -99,7 +106,11 @@
                         <p>'.$nombre_primeraInicial.'.'.$apellido_primeraInicial.'</p>
                     </div>
                     <p class="nombre-usuario">'.$_SESSION["nombre_usuario"].'</p>
+
+                    <div class="backdrop" id="backdrop-up">
+                    </div>
                 </div>
+
                 
                 
                 ';
@@ -111,9 +122,16 @@
         ?>
 
 
-            <iframe src="crear-oferta/crearoferta.html" name="mostrar"></iframe>
+            <iframe src="crear-oferta/crearoferta.php" name="mostrar"></iframe>
 
         </div>
+
+        <div class="right">
+            <div class="backdrop" id="backdrop-right">
+            </div>
+        </div>
+
+
     </div>
 
 

@@ -12,7 +12,7 @@
         private $rol;
 
 
-        public function Reporte($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol){
+        public function __construct($numero_reporte,$fecha,$tipo_reporte,$id_producto,$estado,$motivo,$nombre,$apellido,$rol){
             $this->numero_reporte = $numero_reporte;
             $this->fecha = $fecha;
             $this->tipo_reporte = $tipo_reporte;

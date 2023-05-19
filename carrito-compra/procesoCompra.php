@@ -17,12 +17,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
     <!-- Link Swiper's CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css" />
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
+    <link rel="shortcut icon" href="../assets/imagenes/iconKala.jpg" type="image/x-icon">
 
 
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
@@ -34,6 +34,12 @@
     <link rel="stylesheet" href="../assets/css/carrito-compra/micarrito.css">
     <link rel="stylesheet" href="../assets/css/carrito-compra/procesoCompra.css">
     <script src="../assets/js/main.js" defer></script>
+
+    <style>
+        .container-main{
+            max-width: 1400px;
+        }
+    </style>
 
     <title>Kala - Iniciar sesión</title>
 </head>
@@ -157,7 +163,7 @@
                         <div class="flex-input">
                             <div class="elementos-input">
                                 <label class="label-input">Rut:</label>
-                                <input name="rut" id="rut" class="input-text input-flex-item" type="text" placeholder="Ingrese su rut">
+                                <input name="rut" onkeyup="formatRut(this)" id="rut" class="input-text input-flex-item" type="text" placeholder="Ingrese su rut">
                             </div>
                             <div class="elementos-input ">
                                 <label class="label-input">Telefono:</label>
@@ -230,7 +236,17 @@
 
                                 //IMPRIMIENDO CADA ITEM dentro del carro
                                 foreach ($items_dentro_de_carrito as $k) {
-                                    $subtotal_producto_individual = $k->getPrecioOferta() *  $k->getCantidadEnCarrito();
+                                    $subtotal_producto_individual = 0;
+                                    $precio = 0;
+                                    if($k->getOferta() == 1){
+                                        $subtotal_producto_individual = $k->getPrecioOferta() *  $k->getCantidadEnCarrito();
+                                        $precio = $k->getPrecioOferta();
+                                    }
+                                    else{
+                                        $subtotal_producto_individual = $k->getPrecioVenta() *  $k->getCantidadEnCarrito();
+                                        $precio = $k->getPrecioVenta();
+    
+                                    }
                                     echo '
                                     <div class="item-comprado">
                                         <div class="img-item-comprado">
@@ -239,7 +255,7 @@
                                         <div class="detalles-carro">
                                             <p class="titulo-producto">'.$k->getTitulo().'</p>
                                             <p class="marca">'.$k->getMarca().'</p>
-                                            <p class="precio-cantidad">$'.number_format($k->getPrecioOferta(), 0, ',', '.').' * '.$k->getCantidadEnCarrito().'</p>
+                                            <p class="precio-cantidad">$'.number_format($precio, 0, ',', '.').' * '.$k->getCantidadEnCarrito().'</p>
                                         </div>
                 
                                         <div class="precio-item">
@@ -265,8 +281,19 @@
                                         $lista_id_en_carrito = $dao->mostrarProductoPorId($value);
                                         //IMPRIMIMOS LOS PRODUCTOS
                                         foreach ($lista_id_en_carrito as $k) {
-                                            //Calculamos el precio individual por la cantidad
-                                            $subtotal_producto_individual = $k->getPrecioOferta() *  $_SESSION["cantidad"][$key];
+                                            $subtotal_producto_individual = 0;
+                                            $precio = 0;
+
+                                            if($k->getOferta() == 1){
+                                                $subtotal_producto_individual = $k->getPrecioOferta() *  $_SESSION["cantidad"][$key];
+                                                $precio = $k->getPrecioOferta();
+                                            }
+    
+                                            else{
+                                                $subtotal_producto_individual = $k->getPrecioVenta() *  $_SESSION["cantidad"][$key];
+                                                $precio = $k->getPrecioVenta();
+
+                                            }
                                             echo '
                                             <div class="item-comprado">
                                                 <div class="img-item-comprado">
@@ -275,7 +302,7 @@
                                                 <div class="detalles-carro">
                                                     <p class="titulo-producto">'.$k->getTitulo().'</p>
                                                     <p class="marca">'.$k->getMarca().'</p>
-                                                    <p class="precio-cantidad">'.$k->getPrecioOferta().' * '.$_SESSION["cantidad"][$key].'</p>
+                                                    <p class="precio-cantidad">$'.number_format($precio, 0, ',', '.').' * '.$_SESSION["cantidad"][$key].'</p>
                                                 </div>
                         
                                                 <div class="precio-item">
@@ -381,6 +408,20 @@
             });
 
         });
+
+        function formatRut(input) {
+        // Obtenemos el valor actual del input
+        let rut = input.value.replace(/\./g, '').replace(/\-/g, '');
+      
+        // Eliminamos cualquier caracter que no sea un número o una letra 'k' o 'K'
+        rut = rut.replace(/[^\dkK]/g, '');
+      
+        // Formateamos el RUT agregando puntos y guión
+        rut = rut.replace(/^(\d{1,2})(\d{3})(\d{3})([\dkK]{1})$/, '$1.$2.$3-$4');
+      
+        // Actualizamos el valor del input con el RUT formateado
+        input.value = rut;
+        }
 
 
     </script>
@@ -492,8 +533,18 @@
                         data: {correo,nombre,apellido,rut,telefono,region,comuna,calle,numero},
                         success: function(res){
                             location.href = "procesoCarga.html"
+                            $.ajax({
+                                type:'POST',
+                                url:'enviarCorreo.php', //URL
+                                data: {correo,nombre,apellido,rut,telefono,region,comuna,calle,numero},
+                                success: function(res){
+                                    console.log(res)
+                                }
+                            });
                         }
                     });
+
+
 
                 }
 

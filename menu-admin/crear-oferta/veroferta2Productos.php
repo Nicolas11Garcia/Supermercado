@@ -51,7 +51,7 @@ $id_oferta = $_GET['id_oferta'];
 
     <h2>Ver oferta</h2>
 
-    <a href="crearoferta.html" class="span-plomo" style="font-size: 14px; display: block; margin-bottom: 40px;">Volver a crear oferta</a>
+    <a href="crearoferta.php" class="span-plomo" style="font-size: 14px; display: block; margin-bottom: 40px;">Volver a crear oferta</a>
 
     <table id="tabla">
         <thead>

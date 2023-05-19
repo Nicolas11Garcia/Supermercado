@@ -12,12 +12,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="shortcut icon" href="../assets/imagenes/iconKala.jpg" type="image/x-icon">
+
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+    <link rel="shortcut icon" href="../assets/imagenes/iconKala.jpg" type="image/x-icon">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <!-- Link Swiper's CSS -->
@@ -37,7 +37,7 @@
     <link rel="stylesheet" href="../assets/css/carrito-compra/micarrito.css">
     <script src="../assets/js/main.js" defer></script>
 
-    <title>Kala - Producto</title>
+    <title>Kala - Carrito</title>
 </head>
 <body>
     <div class="barra-primera">
@@ -95,6 +95,9 @@
                 <div class="derecha-iconos">
                     <div class="carrito" count="2">
                         <a class="micarrito"  href="" style="text-decoration: none; color: black;"><i class="fi fi-rr-shopping-cart"></i></a>
+                        <div class="numero-en-carrito ocultar-contador" id="numero-en-carrito">
+                            <p class="id-numero-carrito" id="id-numero-carrito"></p>
+                        </div>
                     </div>
                 </div>
 
@@ -369,7 +372,15 @@
 
                             //IMPRIMIENDO CADA ITEM dentro del carro
                             foreach ($items_dentro_de_carrito as $k) {
-                                $subtotal_producto_individual = $k->getPrecioOferta() *  $k->getCantidadEnCarrito();
+                                $subtotal_producto_individual = 0;
+                                if($k->getOferta() == 1){
+                                    $subtotal_producto_individual = $k->getPrecioOferta() *  $k->getCantidadEnCarrito();
+
+                                }
+                                else{
+                                    $subtotal_producto_individual = $k->getPrecioVenta() *  $k->getCantidadEnCarrito();
+
+                                }
 
                                 echo '
                                     <div class="item-carrito" id="item-carrito'.$k->getId().'">
@@ -433,7 +444,14 @@
                                     $lista_id_en_carrito = $dao->mostrarProductoPorId($value);
                                     //IMPRIMIMOS LOS PRODUCTOS
                                     foreach ($lista_id_en_carrito as $k) {
-                                        $subtotal_producto_individual = $k->getPrecioOferta() *  $_SESSION["cantidad"][$key];
+                                        $subtotal_producto_individual = 0;
+                                        if($k->getOferta() == 1){
+                                            $subtotal_producto_individual = $k->getPrecioOferta() *  $_SESSION["cantidad"][$key];
+                                        }
+
+                                        else{
+                                            $subtotal_producto_individual = $k->getPrecioVenta() *  $_SESSION["cantidad"][$key];
+                                        }
                                         echo '
                                         <div class="item-carrito" id="item-carrito'.$key.'">
                                             <div class="img-text">
@@ -544,6 +562,7 @@
 
 
     <script>
+
         //Ir a pagar
         $("#boton-comprar-ahora").click(function(){
             window.location.href = "procesoCompra.php";
@@ -582,6 +601,8 @@
                             $("#item-carrito" + id).hide("slow");
                         // $("#registro" + id).remove();
                             saberTotales();
+                            cantidadEnCarrito();
+
 
                         }
                     }); 
@@ -612,6 +633,7 @@
                     respu = res.trim();
                     $("#total-precio" + key_).html(res);
                     saberTotales();
+                    cantidadEnCarrito();
 
                 }
         });
@@ -620,6 +642,7 @@
     </script>
 
     <script>
+
     //SABER TOTALES
     //SE IMPLEMENTA EN LA FUNCION DE ACTUALIZAR O CUANDO SE HACE CLIC A AUMENTAR O DISMINUIR
     function saberTotales(){
@@ -630,8 +653,6 @@
                 success: function(res){
                     $("#subtotal-compra").html(res);
                     $("#total-general").html(res);
-
-                    console.log(res);
                 }
         });
     }
@@ -662,6 +683,8 @@
                 cantidad_input.value = num;
                 var cantidad_nueva = cantidad_input.value;
 
+                console.log(cantidad_nueva);
+
                 ActualizarItemCarrito(key_actualizar,id_actualizar,cantidad_nueva);
 
             } 
@@ -672,13 +695,37 @@
                     num = num - 1;
                     cantidad_input.value = num;
                     var cantidad_nueva = cantidad_input.value;
-
                     ActualizarItemCarrito(key_actualizar,id_actualizar,cantidad_nueva);
                 }
 
             }
+
+
         });
     });
+
+
+
+    function cantidadEnCarrito(){
+        $.ajax({
+                type:'POST',
+                url:'mostrarCantidadCarrito.php', //URL
+                data: "", //no entrego ningun valor a php
+                success: function(res){
+                    trim = res.trim();
+                    if(trim >= 1){
+                        $('#id-numero-carrito').html(trim);
+                        $('#numero-en-carrito').removeClass('ocultar-contador');
+                    }
+                    else{
+                        $('#numero-en-carrito').addClass('ocultar-contador');
+                    }
+                }
+        });
+    }
+
+    cantidadEnCarrito();
+
     </script>
 
 

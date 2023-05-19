@@ -13,7 +13,7 @@ $lista_items_detalle_boleta = $dao->mostrarItemsDetalleBoleta($rut);
 
 //ELIMINO LOS PRODUCTOS
 foreach ($lista_items_detalle_boleta as $k) {
-        $dao->borrarProductoDetalleTemportal($k->getIdPosicion());
+        $dao->borrarProductoDetalleTemportal($k->getIdProducto());
 
 }
 

@@ -7,7 +7,7 @@
         private $fecha;
 
 
-        public function Boleta($id_boleta,$id_cliente,$total,$fecha){
+        public function __construct($id_boleta,$id_cliente,$total,$fecha){
             $this->id_boleta = $id_boleta;
             $this->id_cliente = $id_cliente;
             $this->total = $total;
@@ -45,7 +45,7 @@
         private $total;
 
 
-        public function VerLoVendido($numero_boleta,$fecha,$total){
+        public function __construct($numero_boleta,$fecha,$total){
             $this->numero_boleta = $numero_boleta;
             $this->fecha = $fecha;
             $this->total = $total;

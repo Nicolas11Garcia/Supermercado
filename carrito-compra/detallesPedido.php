@@ -23,6 +23,7 @@
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
 
+    <link rel="shortcut icon" href="../assets/imagenes/iconKala.jpg" type="image/x-icon">
 
 
     <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/uicons-brands/css/uicons-brands.css'>
@@ -35,7 +36,13 @@
     <link rel="stylesheet" href="../assets/css/carrito-compra/procesoCompra.css">
     <script src="../assets/js/main.js" defer></script>
 
-    <title>Kala - Iniciar sesión</title>
+    <style>
+        .container-main{
+            max-width: 1400px;
+        }
+    </style>
+
+    <title>Kala - Detalles pedido</title>
 </head>
 <body>
     <div class="barra-primera">
@@ -125,6 +132,8 @@
                                     <?php
 
                                         $numero_orden = $_SESSION["numero_orden"];
+                                        $numero_boleta = $_SESSION["numero_boleta"];
+
                                         $total_orden = 0;
 
                                         $datos_boleta = $dao->buscarOrden($numero_orden);
@@ -134,6 +143,7 @@
                                             <div class="datos-personales">
                                             <p class="pequeño-texto-post-venta titular-datos" style="margin-bottom: 10px;">Datos de la compra:</p>
                                             <p class="pequeño-texto-post-venta">N° de orden: '.$k->getNumeroOrden().'</p>
+                                            <p class="pequeño-texto-post-venta">N° de Boleta: '.$numero_boleta.'</p>
                                             <p class="pequeño-texto-post-venta parrafo-post">Fecha de compra: '.$k->getFecha().'</p>
                                             </div>
         

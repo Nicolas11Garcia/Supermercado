@@ -1,6 +1,7 @@
 <?php 
     include('../php/class/Dao.php');
     $dao = new DAO();
+    session_start();
 
     $id_producto_url = $_GET['producto'];
 
@@ -20,12 +21,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="shortcut icon" href="../assets/imagenes/iconKala.jpg" type="image/x-icon">
+
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-
+    <link rel="shortcut icon" href="../assets/imagenes/iconKala.jpg" type="image/x-icon">
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Link Swiper's CSS -->
@@ -63,7 +64,6 @@
             <?php
                     //SI INICIO SESION O NO
                     if (isset($_SESSION["nombre_usuario"]) == true){
-                        
                         echo '
                         <p class="texto-pequeño" href="iniciarsesion.php">Bienvenido(a) '.$_SESSION["nombre_usuario"].'</p>
                         <p class="texto-pequeño" style="margin-left: 5px; margin-right: 5px;">|</p>
@@ -72,10 +72,9 @@
                     }
                     else{
                         echo '
-                        <a class="texto-pequeño" href="iniciarsesion.php">Iniciar sesión</a>
+                        <a class="texto-pequeño" href="../modulo-sesion-usuario/iniciarsesion.php">Iniciar sesión</a>
                         <p class="texto-pequeño" style="margin-left: 5px; margin-right: 5px;">|</p>
-                        <a class="texto-pequeño" href="registrodeusuario.php">Registrarse</a>
-                        
+                        <a class="texto-pequeño" href="../modulo-sesion-usuario/registrodeusuario.php">Registrarse</a>
                         ';
                     }
                 ?>
@@ -101,9 +100,14 @@
 
             <div class="derecha-header">
                 <div class="derecha-iconos">
-                    <div class="carrito" count="2">
+                    <div class="carrito">
                         <a class="micarrito"  href="../carrito-compra/micarrito.php" style="text-decoration: none; color: black;"><i class="fi fi-rr-shopping-cart"></i></a>
+                        <div class="numero-en-carrito ocultar-contador" id="numero-en-carrito">
+                            <p class="id-numero-carrito" id="id-numero-carrito"></p>
+                        </div>
                     </div>
+
+
                 </div>
 
             </div>
@@ -368,9 +372,19 @@
                                         <p href="" class="descripcion-producto">'.$k->getTitulo().'</p>
                                     </div>
             
-                                    <div class="precio contendor-precio">
-                                        <p class="precio-oferta precio-grande">$'.number_format($k->getPrecioOferta(), 0, ',', '.').'</p>
-                                        <p class="precio-normal-censurado  precio-grande" style="margin-left: 15px;">$'.number_format($k->getPrecioVenta(), 0, ',', '.').'</p>
+                                    <div class="precio contendor-precio">';
+
+                                        if($k->getOferta() == 1){
+                                            echo '
+                                            <p class="precio-oferta precio-grande">$'.number_format($k->getPrecioOferta(), 0, ',', '.').'</p>
+                                            <p class="precio-normal-censurado  precio-grande" style="margin-left: 15px;">$'.number_format($k->getPrecioVenta(), 0, ',', '.').'</p>
+                                            ';
+                                        }
+                                        else{
+                                            echo '<p class="precio-normal  precio-grande">$'.number_format($k->getPrecioVenta(), 0, ',', '.').'</p>
+                                        ';
+                                        }           
+                                echo '
                                     </div>
             
                                     <form class="form-cantidad-button" id="Formulario" method="POST">
@@ -420,7 +434,7 @@
 
         <section class="seccion-productos container-main">
             <div class="flex">
-                <h2 class="titulo-h2">Productos relacionados</h2>
+                <h2 class="titulo-h2">Otros productos</h2>
             </div>
 
             <div class="splide" aria-labelledby="carousel-heading">      
@@ -441,15 +455,23 @@
                                         <a href="" class="marca">Artisan</a>
                                         <a href="producto-individual.php?producto='.$k->getId().'" class="titulo-producto">'.$k->getTitulo().'</a>
                                     </div>
-                                    <div class="precio">
+                                    <div class="precio">';
+                                    if($k->getOferta()==1){
+                                        echo '
                                         <p class="precio-oferta">$'.number_format($k->getPrecioOferta(), 0, ',', '.').'</p>
                                         <p class="precio-normal-censurado">$'.number_format($k->getPrecioVenta(), 0, ',', '.').'</p>
+                                        
+                                        ';
+                                    }
+                                    else{
+                                        echo '<p class="precio-normal">$'.number_format($k->getPrecioVenta(), 0, ',', '.').'</p>';
+                                    }
+                                    echo '
                                     </div>
 
                                     <form>
                                         <input type="hidden" name= "id_producto_recomendado" value="'.$k->getId().'">
-                                        <button class="agregar-al-carrito"><i class="fi fi-rr-shopping-cart"></i>Agregar al carrito</button>
-
+                                        <button id="'.$k->getId().'" type="button" class="agregar-al-carrito agregar_al_carrito_items"><i class="fi fi-rr-shopping-cart" ></i>Agregar al carrito</button>
                                     </form>
                                     
                 
@@ -459,12 +481,6 @@
                             }
 
                         ?>
-        
-                          <li class="splide__slide">Slide 03</li>
-                          <li class="splide__slide">Slide 04</li>
-                          <li class="splide__slide">Slide 05</li>
-                          <li class="splide__slide">Slide 06</li>
-                          <li class="splide__slide">Slide 07</li>
                       </ul>
                 </div>
         
@@ -532,6 +548,8 @@
     </script>
 
     <script>
+            cantidadEnCarrito();
+
     //AGREGAALCARRITO SIN ACTUALIZAR
             $('#agregar_al_carrito').click(function(){
                 $.ajax({
@@ -540,10 +558,45 @@
                     data:$('#Formulario').serialize(),
                     success: function(res){
                         $("#respuesta").html(res);
+                        cantidadEnCarrito();
                     }
                 });
-
             });
+
+            //RECOMENDADOS PRODUCTOS
+            $('.agregar_al_carrito_items').click(function(){
+                var id_producto_url = $(this).attr("id");
+                var cantidad_seleccionada = 1;
+                $.ajax({
+                    type:'POST',
+                    url:'agregaralcarrito.php',
+                    data:{id_producto_url,cantidad_seleccionada},
+                    success: function(res){
+                        $("#respuesta").html(res);
+                        cantidadEnCarrito();
+                    }
+                });
+            });
+
+        
+
+        function cantidadEnCarrito(){
+        $.ajax({
+                type:'POST',
+                url:'../carrito-compra/mostrarCantidadCarrito.php', //URL
+                data: "", //no entrego ningun valor a php
+                success: function(res){
+                    trim = res.trim();
+                    if(trim >= 1){
+                        $('#id-numero-carrito').html(trim);
+                        $('#numero-en-carrito').removeClass('ocultar-contador');
+                    }
+                    else{
+                        $('#numero-en-carrito').addClass('ocultar-contador');
+                    }
+                }
+        });
+    }
     </script>
 
 

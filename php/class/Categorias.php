@@ -5,7 +5,7 @@
         private $descripcion;
 
 
-        public function Categorias($id,$descripcion){
+        public function __construct($id,$descripcion){
             $this->id = $id;
             $this->descripcion = $descripcion;
         }
@@ -30,7 +30,7 @@
         private $descripcion_sub_categoria;
 
 
-        public function Sub_Categorias($id_sub_categoria,$id_categoria,$descripcion_categoria,$descripcion_sub_categoria){
+        public function __construct($id_sub_categoria,$id_categoria,$descripcion_categoria,$descripcion_sub_categoria){
             $this->id_sub_categoria = $id_sub_categoria;
             $this->id_categoria = $id_categoria;
             $this->descripcion_categoria = $descripcion_categoria;
@@ -67,7 +67,7 @@
         private $descripcion_sub_categoria;
         private $descripcion_sub_sub_categoria;
 
-        public function Sub_Sub_Categorias($id_sub_categoria,$id_categoria,$id_sub_sub_categoria,$descripcion_categoria,$descripcion_sub_categoria,$descripcion_sub_sub_categoria){
+        public function __construct($id_sub_categoria,$id_categoria,$id_sub_sub_categoria,$descripcion_categoria,$descripcion_sub_categoria,$descripcion_sub_sub_categoria){
             $this->id_sub_categoria = $id_sub_categoria;
             $this->id_categoria = $id_categoria;
             $this->id_sub_sub_categoria = $id_sub_sub_categoria;

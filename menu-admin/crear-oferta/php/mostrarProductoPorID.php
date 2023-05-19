@@ -24,15 +24,22 @@ if(is_numeric($id_producto)){
     if($lista_datos_producto = $dao->mostrarProductoPorId($id_producto)){
 
         foreach($lista_datos_producto as $k){
+            $precio = 0;
+            $precio_final = 0;
             if($porcentaje != ""){
                 if($k->getOferta() == 1){
                     $descuento_por_unidad = $k->getPrecioOferta() * $porcentaje / 100;
                     $descuento_por_unidad = round($descuento_por_unidad, 0);  // Quitar los decimales
+                    $precio = $k->getPrecioOferta();
+                    $precio_final = $precio - $descuento_por_unidad;
                 }
 
                 else{
                     $descuento_por_unidad = $k->getPrecioVenta() * $porcentaje / 100;
                     $descuento_por_unidad = round($descuento_por_unidad, 0);  // Quitar los decimales
+                    $precio = $k->getPrecioVenta();
+                    $precio_final = $precio - $descuento_por_unidad;
+
                 }
             }
 
@@ -50,6 +57,7 @@ if(is_numeric($id_producto)){
                     <p class="dato-producto">Precio Venta: <span class="span-plomo">$ '.number_format($k->getPrecioVenta(), 0, ',', '.').'</span></p>
                     <p class="dato-producto">Precio Oferta: <span class="span-plomo">$ '.number_format($k->getPrecioOferta(), 0, ',', '.'). '</span></p>
                     <p class="dato-producto">Descuento <span style="color: #51AA1B;">('.$porcentaje.'%)</span/> = -$'.$descuento_por_unidad.' por unidad a partir de la unidad numero <span style="color: #51AA1B;">'.$cantidad_oferta.'</span></p>
+                    <p class="dato-producto">Precio final si se cumple descuento: $'.number_format($precio_final, 0, ',', '.').' cada unidad</p>
                 </div>
             </div>
             

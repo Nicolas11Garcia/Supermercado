@@ -6,11 +6,8 @@ $dao = new DAO();
 $numero_boleta = $_POST['numero_boleta']; //Recupero ID de producto de caja 
 
 $datos_boleta = $dao->buscarBoletaID($numero_boleta);
-if($datos_boleta == 0){
-    echo 'no hay ';
-}
 
-else{
+if($datos_boleta >= 1){
     $rut = "";
     $nombre = "";
     $apellido = "";
@@ -27,6 +24,10 @@ else{
     }
 
     echo $rut.'{'.$nombre.'{'.$apellido.'{'.$total;
+}
+
+else{
+    echo 'nohay';
 }
 
 

@@ -82,18 +82,27 @@
             //BUSCAR DATOS DE CLIENTE SIN ACTUALIZAR
             $('#buscar').click(function(){
                 var numero_boleta = document.getElementById('numero-boleta').value;
-                console.log(numero_boleta);
                 $.ajax({
                     type:'POST',
                     url:'php/visualizarDatosCliente.php',
                     data:{numero_boleta},
+                    
                     success: function(res){
-                        separacion_datos = res.split("{");
+                        trim = res.trim();
+                        console.log(trim);
 
-                        $("#rut").html(separacion_datos[0]);
-                        $("#nombre").html(separacion_datos[1]);
-                        $("#apellido").html(separacion_datos[2]);
-                        $("#total").html(separacion_datos[3]);
+                        if(trim == 'nohay'){
+
+                        }
+                        else{
+                            trim = res.split("{");
+                            $("#rut").html(separacion_datos[0]);
+                            $("#nombre").html(separacion_datos[1]);
+                            $("#apellido").html(separacion_datos[2]);
+                            $("#total").html(separacion_datos[3]);
+                        }
+
+
                         
                     }
                 });

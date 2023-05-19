@@ -4,6 +4,8 @@
     session_start();
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -13,11 +15,11 @@
 
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <link rel="shortcut icon" href="../assets/imagenes/iconKala.jpg" type="image/x-icon">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="../../assets/imagenes/iconKala.jpg" type="image/x-icon">
 
 
     <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
@@ -42,6 +44,9 @@
         </div>
 
         <?php
+
+if ($_SESSION["cargo"] == 3){
+
                     //Separamos el nombre y el apellido en variables diferentes;
                     $nombre_completo = explode(" ", $_SESSION["nombre_usuario"]);
                     $nombre_primeraInicial = substr($nombre_completo[0],0,1);
@@ -57,6 +62,10 @@
                     
                     
                     ';
+}
+                    else{
+                        echo '<script>window.location.href = "../../alerta-permisos/index.html";</script>';
+                    }
 
         ?>
 
@@ -77,7 +86,7 @@
                             <div class="caja caja-disponible" id="'.$k->getNumeroCaja().'">
                                 <p class="texto-estado disponible">'.$k->getEstado().'</p>
                                 <p class="texto-caja disponible">Caja <br> '.$k->getNumeroCaja().'</p>
-                                <i class="fi fi-br-check disponible"></i>
+                                <i class="fi fi-rr-check disponible"></i>
                             </div>
                         ';
                     }
@@ -130,7 +139,7 @@
                 respuesta_sin_espacios = res.trim();
 
                 if(respuesta_sin_espacios == 'Puedes pasar'){
-                    location.href = "../menu.php";
+                    location.href = "../index.php";
                 }
 
                 else{
