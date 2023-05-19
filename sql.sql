@@ -18,7 +18,7 @@ INSERT INTO rol VALUES(NULL,'Cliente');
 INSERT INTO rol VALUES(NULL,'Admin');
 INSERT INTO rol VALUES(NULL,'Cajero');
 INSERT INTO rol VALUES(NULL,'Encargado de stock');
-INSERT INTO rol VALUES(NULL,'Encargado de Ventas');
+
 
 
 CREATE TABLE usuarios(
@@ -108,7 +108,11 @@ INSERT INTO marcas VALUES (NULL,'Scott');
 INSERT INTO marcas VALUES (NULL,'Red Bull');
 INSERT INTO marcas VALUES (NULL,'Receta del abuelo');
 INSERT INTO marcas VALUES (NULL,'Cuisine & Co');
+INSERT INTO marcas VALUES (NULL,'Sahne Nuss');
+INSERT INTO marcas VALUES (NULL,'Kuchenmeister');
+INSERT INTO marcas VALUES (NULL,'Pulmahue');
 
+INSERT INTO marcas VALUES (NULL,'Kraft');
 
 
 
@@ -148,6 +152,20 @@ INSERT INTO productos VALUES (NULL,'Papel Higiénico Scott Rindemax 25 m 8 un.',
 INSERT INTO productos VALUES (NULL,'Bebida Energética Red Bull 250 ml',4,1,1,1,1590,1390,20,20,'','4.jpg',1,1,1);
 INSERT INTO productos VALUES (NULL,'Jamón serrano 100 g',5,1,1,1,5990,3990,20,20,'','5.jpg',1,1,1);
 INSERT INTO productos VALUES (NULL,'Aceite maravilla 900 ml',6,1,1,1,4290,3290,20,20,'','6.jpg',1,1,1);
+
+INSERT INTO productos VALUES (NULL,'Torta panqueque naranja 15 porciones',6,2,2,1,15990,0,20,20,'','7.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Chocolate Sahne Nuss Barra 250 g',7,2,2,1,4990,0,20,20,'','8.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Torta Amor 15 porciones',7,2,2,1,13990,0,20,20,'','9.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Queque Marmolado Kuchenmeister 400 g',8,2,2,1,3100,0,20,20,'','10.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Magdalenas sabor vainilla 6 un.',9,2,2,1,1790,0,20,20,'','11.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Mini quequitos chips de chocolate 225 g',9,2,2,1,2090,0,20,20,'','12.jpg',1,1,0);
+
+INSERT INTO productos VALUES (NULL,'Mayonesa Kraft pote 1.26 kg',10,3,2,1,9299,0,20,20,'','13.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Mayonesa 850 g',10,3,2,1,3590,0,20,20,'','14.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Mayonesa light 896 g',10,3,2,1,6090,0,20,20,'','15.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Mayonesa 582 g',10,3,2,1,6399,0,20,20,'','16.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Ketchup 900 g',10,3,2,1,2790,0,20,20,'','17.jpg',1,1,0);
+INSERT INTO productos VALUES (NULL,'Ketchup 567 g',10,3,2,1,3650,0,20,20,'','18.jpg',1,1,0);
 
 
 
@@ -230,6 +248,7 @@ CREATE TABLE productos_detalle_boleta_temporal(
     producto_id_fk INT,
     precio INT,
     rut VARCHAR(25),
+    oferta INT,
 
     PRIMARY KEY (id),
     FOREIGN KEY (producto_id_fk) REFERENCES productos(id)
@@ -273,6 +292,29 @@ INSERT INTO cajas VALUES(NULL,'Fuera de servicio');
 INSERT INTO cajas VALUES(NULL,'Fuera de servicio');
 
 
+
+CREATE TABLE oferta_1_producto (
+    id INT AUTO_INCREMENT,
+    producto_id_fk INT,
+    cantidad INT,
+    porcentaje INT,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (producto_id_fk) REFERENCES productos(id)
+
+);
+
+CREATE TABLE oferta_2_producto (
+    id INT AUTO_INCREMENT,
+    producto_id_fk_1 INT,
+    producto_id_fk_2 INT,
+    porcentaje INT,
+
+    PRIMARY KEY (id),
+    FOREIGN KEY (producto_id_fk_1) REFERENCES productos(id),
+    FOREIGN KEY (producto_id_fk_2) REFERENCES productos(id)
+
+);
 
 
 
